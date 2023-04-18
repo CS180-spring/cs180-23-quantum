@@ -4,36 +4,36 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "databases.h"
+#include "documents.h"
 
 using namespace std;
-
-class Document; //Forward Declaration
 
 class Collection {
 public:
     // Constructor
     Collection();
-    Collection(string name_, Database parentDB_);
-    Collection(string name_, vector<Document> documents_, Database parenDB_);
+    Collection(string name_);
+    Collection(string name_, vector<Document> documents_);
 
     // Getter functions
     string getName();
     vector<Document> getDocuments();
-    Database getParentDB();
     
     // Setter functions
     void setName(string name_);
     
     // Function declarations
-    void create_Collection(string name, Database parentDB);
-    void update_Collection(string name, Database parentDB);
-    void delete_Collection(string name, Database parentDB);
+    void create_Document(int id, string content);
+    void read_Document(int id);
+    void update_Document(int id, string content);
+    void delete_Document(int id);
+
+    //Helper functions
+    Document lookup(int id);
 
 private:
   string name;
   vector<Document> documents;
-  Database parentDB;
 };
 
 #endif

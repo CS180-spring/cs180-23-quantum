@@ -2,17 +2,15 @@
 
 using namespace std;
 
-Collection::Collection(string name_, Database parentDB_) {
+Collection::Collection(string name_) {
   name = name_;
   vector<Document> docs;
   documents = docs;
-  parentDB = parentDB_;
 }
 
-Collection::Collection(string name_, vector<Document> documents_, Database parentDB_){
+Collection::Collection(string name_, vector<Document> documents_){
   name = name_;
   documents = documents_;
-  parentDB = parentDB_;
 }
 
 //Getter functions
@@ -24,56 +22,75 @@ vector<Document> Collection::getDocuments() {
   return documents;
 }
 
-Database Collection::getParentDB(){
-  return parentDB;
-}
-
-
 //Setter functions
 void Collection::setName(string name_) {
   name = name_;
 }
 
-// CUD operations
-//CREATE Collection
-void create_Collection(string name, Database parentDB) {
-  // Check if Collection with same name already exists
-  for (Collection & collection : parentDB.getCollections()) {
-    if (collection.getName() == name) {
-      cout << "Error: collection with name " << name << " already exists." << endl;
+//CRUD Operations
+//Create a Document
+void Collection::create_Document(int id, string content) {
+  // Check if document with same ID already exists
+  for (Document &doc : documents) {
+    if (doc.getId() == id) {
+      cout << "Error: document with ID " << id << " already exists." << endl;
       return;
     }
   }
-  // Create new Collection if otherwise
-  vector<Document> documents;
-  Collection c(name, documents, parentDB);
-  parentDB.getCollections().push_back(c);
-  cout << "Collection with name " << name << " created successfully." << endl;
+  // Create new document if otherwise
+  Document d(id, content);
+  documents.push_back(d);
+  cout << "Document with ID " << id << " created successfully." << endl;
   return;
 }
 
-//UPDATE Collection
-void update_Collection(string name, Database parentDB) {
-  // Find Collection with specified name
-  for (Collection & collection : parentDB.getCollections()) {
-    if (collection.getName() == name) {
-      collection.setName(name);
-      cout << "Collection renamed to " << name << " successfully." << endl;
+// READ DOCUMENT
+void Collection::read_Document(int id) {
+  // Find document with specified ID
+  for (Document doc : documents) {
+    if (doc.getId() == id) {
+      cout << "ID: " << doc.getId() << std::endl;
+      cout << "Content: " << doc.getContent() << std::endl;
       return;
     }
   }
-  cout << "Error: Collection with name " << name << " not found." << endl;
+
+  cout << "Error: document with ID " << id << " not found." << std::endl;
 }
 
-//DELETE Collection
-void delete_Collection(string name, Database parentDB) {
-  // Delete Collection with specified name
-  for (auto it = parentDB.getCollections().begin(); it != parentDB.getCollections().end(); ++it) {
-    if (it->getName() == name) {
-      parentDB.getCollections().erase(it);
-      cout << "Collection with name " << name << " deleted successfully." << endl;
+// UPDATE DOCUMENT
+void Collection::update_Document(int id, string content) {
+  // Find document with specified ID
+  for (Document &doc : documents) {
+    if (doc.getId() == id) {
+      doc.setContent(content);
+      cout << "Document with ID " << id << " updated successfully." << endl;
       return;
     }
   }
-  cout << "Error: Collection with name " << name << " not found." << endl;
+  cout << "Error: document with ID " << id << " not found." << endl;
+}
+
+// DELETE DOCUMENT
+void Collection::delete_Document(int id) {
+  // Delete Collection with specified name
+  int i = 0;
+  for (Document doc : documents) {
+    if (doc.getId() == id) {
+      documents.erase(documents.begin()+i);
+      cout << "Erased document with ID " << doc.getId() << endl;
+      return;
+    }
+    i++;
+  }
+  cout << "Error: document with id " << id << " does not exist." << endl;
+}
+
+//Helper functions
+Document Collection::lookup (int id){
+  for (Document doc : documents) {
+    if (doc.getId() == id) {
+      return doc;
+    }
+  } 
 }

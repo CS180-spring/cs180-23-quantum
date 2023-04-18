@@ -4,10 +4,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "collections.h"
 
 using namespace std;
-
-class Collection; //Forward declaration
 
 class Database {
 public:
@@ -24,9 +23,12 @@ public:
     void setName(string name_);
 
     // Function declarations
-    void create_Database(string name, vector<Database>& databases);
-    void update_Database(string name, vector<Database>& databases);
-    void delete_Database(string name, vector<Database>& databases);
+    void create_Collection(string name);
+    void update_Collection(string name);
+    void delete_Collection(string name);
+
+    //Helper function
+    Collection lookup(string name);
         
 private:
   string name;
