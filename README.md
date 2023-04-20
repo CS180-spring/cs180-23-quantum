@@ -34,14 +34,14 @@ The developer is able to access this layout through a web browser like Google Ch
   
 The user will be able to create, delete, acess documents using self explanatory buttons on the front end.
 <p align = "center">
-<img src = "https://github.com/CS180-spring/cs180-23-quantum/blob/main/figma.png">
+<img src = "https://github.com/CS180-spring/cs180-23-quantum/blob/main/assets/figma.png">
   
  Below is an early visualization of the layout for querying, using the filter and limit methods.
   
  In order to filter a certain value, the user can type the desired value in the "Search for filters" cell.
  The user may aslo use multiple filters simultaneously by including additional values in the cells on the right of "OR".
 <p align = "center">
-<img src = "https://github.com/CS180-spring/cs180-23-quantum/blob/main/fimga2.png">
+<img src = "https://github.com/CS180-spring/cs180-23-quantum/blob/main/assets/fimga2.png">
 
 
 
