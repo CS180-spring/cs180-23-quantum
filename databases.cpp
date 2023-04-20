@@ -45,12 +45,12 @@ void Database::create_Collection(string name) {
 }
 
 //UPDATE Collection
-void Database::update_Collection(string name) {
+void Database::update_Collection(string name, string newName) {
   // Find Collection with specified name
   for (Collection & coll : collections) {
     if (coll.getName() == name) {
-      coll.setName(name);
-      cout << "Collection renamed to " << name << " successfully." << endl;
+      coll.setName(newName);
+      cout << "Collection renamed to " << newName << " successfully." << endl;
       return;
     }
   }
