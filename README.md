@@ -22,9 +22,9 @@ QuantumDB is a Web-based Document Data Store used to manage and process large vo
 - Feature 2: Filters data according to user’s preference
 - Feature 3: Allows “SQL type” querying
 - Feature 4: Import/Export Data
-- Sort query (Order by ascending and descending)
-- Count query
-- Limit query
+- Feature 5: Sort query (Order by ascending and descending)
+- Feature 6: Count query
+- Feature 7: Limit query
 
 
 
