@@ -24,7 +24,7 @@ public:
 
     // Function declarations
     void create_Collection(string name);
-    void update_Collection(string name);
+    void update_Collection(string name, string newName);
     void delete_Collection(string name);
 
     //Helper function
