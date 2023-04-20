@@ -27,9 +27,13 @@ QuantumDB is a Web-based Document Data Store used to manage and process large vo
 - Feature 7: Limit query
 
 
-##Interface Documentation
+## Interface Documentation
 <p align = "center">
 <img src = "https://github.com/CS180-spring/cs180-23-quantum/blob/main/figma.png">
+  
+  
+
+<img src = "https://github.com/CS180-spring/cs180-23-quantum/blob/main/fimga2.png">
 
 
 
