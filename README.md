@@ -2,22 +2,30 @@
 
 # QuantumDB - A Document Data Store
 
-QuantumDB is a Web-based Document Data Store used to manage and process large volumes of data. The product will be able to create documents, read documents, update documents, as well as deleting documents. The product will also have the ability to filter and query data. We will use AWS EC2 to host our application, and it will just be used just like a PC (so we don't have to run it all the time). The data will be stored on the virtual server and developers will be able to interact with QuantumDB using a REST API provided to them.
+QuantumDB is a Web-based Document Data Store used to manage and process large volumes of data. The product will be able to create documents, read documents, update documents, as well as deleting documents. It will also allow developers to create collections and databases to group related documents together. The product will also have the ability to filter and query data. The data will be stored locally and developers will be able to interact with QuantumDB the GUI provided to them.
 
 ## Team members
 - Rasa Jahromi (Software Architect, Data Structure Engineer)
-- Omar Nosseir (Cloud Engineer, Algorithm and Performance Specialist)
+- Omar Nosseir (Software Architect, Algorithm and Performance Specialist)
 - Adhith Karthikeyan (Quality Assurance/Testing Lead, Data Structure Engineer)
-- Andrew Krikorian (Lead Frontend Engineer, Algorithm and Performance Specialist)
+- Andrew Krikorian (Frontend Engineer, Algorithm and Performance Specialist)
+- Yuk Shun Wong (Frontend Engineer, Quality Assurance/Testing Lead)
 
 ## Technologies
 - **Interface**: Web app console
 - **Programming Languages**: C++ and JavaScript
+- **Frontend: Reacts.js
+- **Middleware: Restbed
 
 ## Features (tentative)
-- Feature 1: Creates, reads, updates and deletes documents
+- Feature 1: Creates, reads, updates and deletes documents/collections/databases
 - Feature 2: Filters data according to user’s preference
 - Feature 3: Allows “SQL type” querying
+- Feature 4: Import/Export Data
+- Sort query (Order by ascending and descending)
+- Count query
+- Limit query
+
 
 
 
