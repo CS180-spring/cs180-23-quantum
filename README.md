@@ -14,8 +14,8 @@ QuantumDB is a Web-based Document Data Store used to manage and process large vo
 ## Technologies
 - **Interface**: Web app console
 - **Programming Languages**: C++ and JavaScript
-- **Frontend: Reacts.js
-- **Middleware: Restbed
+- **Frontend**: Reacts.js
+- **Middleware**: Restbed
 
 ## Features (tentative)
 - Feature 1: Creates, reads, updates and deletes documents/collections/databases
