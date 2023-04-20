@@ -28,10 +28,18 @@ QuantumDB is a Web-based Document Data Store used to manage and process large vo
 
 
 ## Interface Documentation
+
+Below is an abstract visualization of the colorscheme and general layout of the software.
+The developer is able to access this layout through a web browser like Google Chrome using the following url <tbd>
+  
+The user will be able to create, delete, acess documents using self explanatory buttons on the front end.
 <p align = "center">
 <img src = "https://github.com/CS180-spring/cs180-23-quantum/blob/main/figma.png">
   
+ Below is an early visualization of the layout for querying, using the filter and limit methods.
   
+ In order to filter a certain value, the user can type the desired value in the "Search for filters" cell.
+ The user may aslo use multiple filters simultaneously by including additional values in the cells on the right of "OR".
 <p align = "center">
 <img src = "https://github.com/CS180-spring/cs180-23-quantum/blob/main/fimga2.png">
 
