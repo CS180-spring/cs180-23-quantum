@@ -18,7 +18,7 @@ public:
     // Getter functions
     string getName();
     vector<Collection> getCollections();
-    
+        
     // Setter functions
     void setName(string name_);
 
@@ -26,9 +26,9 @@ public:
     void create_Collection(string name);
     void update_Collection(string name, string newName);
     void delete_Collection(string name);
-
+    void read();
     //Helper function
-    Collection lookup(string name);
+    Collection& lookup(string name);
         
 private:
   string name;

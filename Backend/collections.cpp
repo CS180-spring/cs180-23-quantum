@@ -1,5 +1,5 @@
 #include "collections.h"
-
+#include <fstream>
 using namespace std;
 
 Collection::Collection(string name_) {
@@ -18,6 +18,10 @@ string Collection::getName() {
   return name;
 }
 
+string Collection::getParent() {
+  return parent;
+}
+
 vector<Document> Collection::getDocuments() {
   return documents;
 }
@@ -25,6 +29,10 @@ vector<Document> Collection::getDocuments() {
 //Setter functions
 void Collection::setName(string name_) {
   name = name_;
+}
+
+void Collection::setParent(string name_) {
+  parent = name_;
 }
 
 //CRUD Operations
@@ -40,6 +48,10 @@ void Collection::create_Document(int id, string content) {
   // Create new document if otherwise
   Document d(id, content);
   documents.push_back(d);
+  string dirname = "All_Databases" + string("/") + string(this->parent) + string("/") + string(name) + string("/") + string(to_string(id)+".json");
+  ofstream outfile(dirname);
+  outfile << "{\n" << "\"" << content << "\"" << '\n' << "}";
+  outfile.close();
   cout << "Document with ID " << id << " created successfully." << endl;
   return;
 }
@@ -64,6 +76,10 @@ void Collection::update_Document(int id, string content) {
   for (Document &doc : documents) {
     if (doc.getId() == id) {
       doc.setContent(content);
+      string dirname = "All_Databases" + string("/") + string(this->parent) + string("/") + string(name) + string("/") + string(to_string(id)+".json");
+      ofstream outfile(dirname);
+      outfile << "{\n" << "\"" << content << "\"" << '\n' << "}";
+      outfile.close();
       cout << "Document with ID " << id << " updated successfully." << endl;
       return;
     }
@@ -77,6 +93,8 @@ void Collection::delete_Document(int id) {
   int i = 0;
   for (Document doc : documents) {
     if (doc.getId() == id) {
+      string dirname = "All_Databases" + string("/") + string(this->parent) + string("/") + string(name) + string("/") + string(to_string(id)+".json");
+      remove(dirname.c_str());
       documents.erase(documents.begin()+i);
       cout << "Erased document with ID " << doc.getId() << endl;
       return;
@@ -92,5 +110,6 @@ Document Collection::lookup (int id){
     if (doc.getId() == id) {
       return doc;
     }
-  } 
+  }
+  throw std::runtime_error("Collection not found");
 }

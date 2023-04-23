@@ -18,9 +18,10 @@ public:
     // Getter functions
     string getName();
     vector<Document> getDocuments();
-    
+    string getParent();
     // Setter functions
     void setName(string name_);
+    void setParent(string name_);
     
     // Function declarations
     void create_Document(int id, string content);
@@ -34,6 +35,7 @@ public:
 private:
   string name;
   vector<Document> documents;
+  string parent;
 };
 
 #endif
