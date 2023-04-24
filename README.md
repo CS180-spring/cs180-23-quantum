@@ -44,4 +44,6 @@ The user will be able to create, delete, acess documents using self explanatory 
 <img src = "https://github.com/CS180-spring/cs180-23-quantum/blob/main/assets/fimga2.png">
 
 
+## Burndown Chart
+<img src = "https://github.com/CS180-spring/cs180-23-quantum/blob/main/assets/BurndownChart.PNG">
 
