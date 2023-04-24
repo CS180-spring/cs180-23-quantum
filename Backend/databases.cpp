@@ -1,7 +1,6 @@
 #include "databases.h"
-#include <sys/stat.h>
-#include <direct.h>
-#include <vector>
+#include <filesystem>
+
 using namespace std;
 
 Database::Database(string name_){
@@ -39,49 +38,66 @@ void Database::create_Collection(string name) {
       return;
     }
   }
-  // Create new Databas if otherwise
+  // Create new Database if otherwise
   Collection coll(name);
   coll.setParent(getName());
-  // coll.setParentName(this->name);
-  // cout << this->name << endl;
   collections.push_back(coll);
-  string glob_dirname = "All_Databases" + string("/") + this->name + string("/") + string(name);
-  int status = _mkdir(glob_dirname.c_str());
-  cout << "Collection with name " << name << " created successfully." << endl;
-  return;
+
+  //System commands
+  filesystem::path dir_path = "../database/" + coll.getParent() + "/" + name;
+  error_code ec;
+  if (filesystem::create_directory(dir_path, ec)) {
+      cout << "Collection created successfully!" << endl;
+  } else {
+      cout << "Collection creation failed: " << ec.message() << endl;
+  }
 }
 
 //UPDATE Collection
 void Database::update_Collection(string name, string newName) {
   // Find Collection with specified name
+  bool worked = false;
   for (Collection & coll : collections) {
     if (coll.getName() == name) {
       coll.setName(newName);
-      string dirname = "All_Databases" + string("/") + string(this->name) + string("/") + string(name);
-      string newdirname = "All_Databases" + string("/") + string(this->name) + string("/") + string(newName);
-      rename(dirname.c_str(), newdirname.c_str());
-      cout << "Collection renamed to " << newName << " successfully." << endl;
-      return;
+      //System commands
+      string old_path = "../database/" + coll.getParent() + "/" + name;
+      string new_path = "../database/" + coll.getParent() + "/" + newName;
+      try {
+          filesystem::rename(old_path, new_path);
+          cout << "Collection renamed to " << newName << " successfully." << endl;
+      } catch (const filesystem::filesystem_error& e) {
+          cout << "Collection renaming failed: " << e.what() << endl;
+      }
+      worked = true;
     }
   }
-  cout << "Error: Collection with name " << name << " does not exist." << endl;
+  if (!worked) {
+    cout << "Error: Collection with name " << name << " does not exist." << endl;
+  }
 }
 
 //DELETE Collection
 void Database::delete_Collection(string name) {
   // Delete Collection with specified name
   int i = 0;
+  bool worked = false;
   for (Collection & coll : collections) {
     if (coll.getName() == name) {
-      string dirname = "All_Databases" + string("/") + string(this->name) + string("/") + string(name);
-      _rmdir(dirname.c_str());
       collections.erase(collections.begin()+i);
-      cout << "Erased collection " << name << "!" << endl;
-      return;
+      //System commands
+      filesystem::path dir_path = "../database/" + coll.getParent() + "/" + name;
+      error_code ec;
+      if (filesystem::remove_all(dir_path, ec)) {
+          cout << "Collection deleted successfully!" << endl;
+      } else {
+          cout << "Collection deletion failed: " << ec.message() << endl;
+      }
+      worked = true;
     }
     i++;
   }
-  cout << "Error: Collection with name " << name << " does not exist." << endl;
+  if (!worked) cout << "Error: Collection with name " << name << " does not exist." << endl;
 }
 
 //Helper functions
@@ -95,6 +111,7 @@ Collection& Database::lookup (string name){
   // cout << "Collection not found." << endl;
   // return c;
 }
+
 void Database::read() {
   for (auto i : collections) {
     cout << i.getName() << " ";

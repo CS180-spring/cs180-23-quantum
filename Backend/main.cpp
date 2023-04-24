@@ -3,29 +3,20 @@
 #include "databases.h"
 #include "mastercontainer.h"
 #include <iostream>
-#include <sys/stat.h>
-#include <direct.h>
-#include <fstream>
-
-//For testing at the moment
-#include <cassert>
 
 int main() {
-  
-  
-  // ********************************************************************************************
-
   // Create "Master Container" which holds all Databases
   MasterContainer m;
 
   // Create a Database called Vehicles
   m.create_Database("Vehicles");
+  
+  // Create another databse called Hello
   m.create_Database("Hello");
+  //Rename Hello database to Bye
+  m.update_Database("Hello", "Bye");
 
-  /* Create Collections in the Vehicles Database.
-    - m.lookup() returns a database, where we can then create collections in
-    - We can also do .lookup() on a Collection, which will allow us to create Documents in
-  */
+  //Create multiple collections within Vehicles
   m.lookup("Vehicles").create_Collection("Cars");
   m.lookup("Vehicles").create_Collection("Planes");
   m.lookup("Vehicles").create_Collection("Train");
@@ -33,29 +24,36 @@ int main() {
 
   // Rename the collection "Cars" to "Boats"
   m.lookup("Vehicles").update_Collection("Cars", "Boats");
+  
+  //Delete the train collection
+  m.lookup("Vehicles").delete_Collection("Train");
 
+  //m.readAll_Database();
+  //m.lookup("Vehicles").read();
+  
+  
   // Create a few documents inside of the "Planes" collection
-
-  m.lookup("Vehicles").lookup("Planes").create_Document(1, "BOEING 777");
-  m.lookup("Vehicles").lookup("Planes").create_Document(2, "AIRBUS 100");
-
-  // Delete Document 2
-  m.lookup("Vehicles").lookup("Planes").delete_Document(2);
+  string field1 = "{\"model\":\"BOEING 777\"}";
+  
+  m.lookup("Vehicles").lookup("Planes").create_Document(1, field1);
+  m.lookup("Vehicles").lookup("Planes").create_Document(2, field1);
+  m.lookup("Vehicles").lookup("Planes").create_Document(3, field1);
+  
+  // Delete Document 3
+  m.lookup("Vehicles").lookup("Planes").delete_Document(3);
+  // Can't delete the same document twice
+  m.lookup("Vehicles").lookup("Planes").delete_Document(3);
 
   // Update a document with a valid ID. 
-  m.lookup("Vehicles").lookup("Planes").update_Document(1, "Airplane");
-  m.lookup("Vehicles").lookup("Planes").update_Document(2, "testfails");
+  string field2 = "{\"model\":\"AIRBUS 100\"}";
+  m.lookup("Vehicles").lookup("Planes").update_Document(2, field2);
 
   // Delete a collection, which destroys all documents in it as well.
-  m.lookup("Vehicles").delete_Collection("Boats");
+  // Uncomment if needed
+  // m.lookup("Vehicles").delete_Collection("Boats");
 
   // Update the name of the database
   m.update_Database("Vehicles", "Transport");
-  // Delete the database "Hello", which was created earlier
-  m.delete_Database("Hello");
-
-
-  // ********************************************************************************************
-
+  
   return 0;
 }

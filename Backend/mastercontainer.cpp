@@ -1,59 +1,83 @@
 #include "mastercontainer.h"
-#include <direct.h>
 #include <filesystem>
-//Constructors
 
 using namespace std;
 
-
 MasterContainer::MasterContainer() {
-    int status = _mkdir("All_Databases");
+    //System commands
+    filesystem::path root_dir_path = filesystem::current_path().parent_path() / "database";
+    if (filesystem::create_directory(root_dir_path)) {
+        cout << "Root database created successfully!" << endl;
+    } else {
+        cout << "Root database creation failed!" << endl;
+    }
 }
 
 void MasterContainer::create_Database(string name) {
-    for (Database &d : databases) {
-        if (d.getName() == name) {
+    for (Database &db : databases) {
+        if (db.getName() == name) {
             cout << "Error: Database with name " << name << "already exists." << endl;
             return;
         }
     }
     Database d(name);
     databases.push_back(d);
-    string parent = "All_Databases";
-    string n = parent + string("/") + name;
-    int status = _mkdir(n.c_str());
-    cout << "Database " << name << " created successfully!" << endl;
+    //System commands
+    filesystem::path dir_path = "../database/" + name;
+    error_code ec;
+    if (filesystem::create_directory(dir_path, ec)) {
+        cout << "Database created successfully!" << endl;
+    } else {
+        cout << "Database creation failed: " << ec.message() << endl;
+    }
 }
 
 void MasterContainer::update_Database(string name, string newName) {
-  // Find document with specified ID
-  for (Database &d : databases) {
-    if (d.getName() == name) {
-      d.setName(newName);
-      string parent = "All_Databases/";
-      rename((parent + name).c_str(), (parent + newName).c_str());
-      cout << "DB changed to " << newName << endl;
-      return;
+  // Find database with specified ID
+  bool worked = false;
+  for (Database &db : databases) {
+    if (db.getName() == name) {
+      db.setName(newName);
+      //System commands
+      string old_path = "../database/" + name;
+      string new_path = "../database/" + newName;
+      try {
+          filesystem::rename(old_path, new_path);
+          cout << "Database renamed to " << newName << " successfully." << endl;
+      } catch (const filesystem::filesystem_error& e) {
+          cout << "Database renaming failed: " << e.what() << endl;
+      }
+      worked = true;
     }
   }
-  cout << "Database not found" << endl;
+  if (!worked) {
+    cout << "Error: Database with name " << name << " does not exist." << endl;
+  }
 }
 
 void MasterContainer::delete_Database(string name) {
-  // Delete Collection with specified name
+  // Delete database with specified name
   int i = 0;
+  bool worked = false;
   for (Database & d: databases) {
     if (d.getName() == name) {
-      string parent = "All_Databases/";
-      _rmdir((parent + name).c_str());
       databases.erase(databases.begin()+i);
-      cout << "Erased Database: " << name << endl;
-      return;
+      //System commands
+      filesystem::path dir_path = "../database/" + name;
+      error_code ec;
+      if (filesystem::remove_all(dir_path, ec)) {
+          cout << "Database deleted successfully!" << endl;
+      } else {
+          cout << "Database deletion failed: " << ec.message() << endl;
+      }
+      worked = true;
     }
     i++;
   }
-  cout << "Error: Collection with name " << name << " does not exist." << endl;
+  if (!worked) cout << "Error: Database with name " << name << " does not exist." << endl;
 }
+
+//Helper functions
 void MasterContainer::readAll_Database() {
     for (Database &d : databases) {
         cout << d.getName() << " ";
@@ -73,10 +97,3 @@ Database& MasterContainer::lookup(string name) {
 vector<Database> MasterContainer::get() {
   return this->databases;
 }
-
-
-  // string dir = "hello";
-  // int st = _mkdir(dir.c_str());
-  // string dname = "/" + string("qr");
-  // string full = dir + dname;
-  // int status = _mkdir(full.c_str());
