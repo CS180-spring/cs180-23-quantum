@@ -5,6 +5,7 @@ add_library(backend OBJECT
     backend/documents.cpp
     backend/collections.cpp
     backend/databases.cpp
+    backend/mastercontainer.cpp
 )
 
 add_custom_target(backend_target
