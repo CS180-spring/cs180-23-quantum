@@ -14,7 +14,9 @@ const Sidebar = () => {
   const location = useLocation()
 
   const Menus = [
-    { title: 'Dashboard', path: '/dashboard', src: <AiFillPieChart /> },
+    { title: 'Database', path: '/database', src: <AiFillPieChart /> },
+    // { title: 'Collection', path: '/collection', src: <AiFillFolder /> },
+    // { title: 'Table', path: '/table', src: <AiOutlineTable /> },
     { title: 'Profile', path: '/profile', src: <CgProfile /> },
     { title: 'Signin', path: '/login', src: <SiOpenaccess />, gap: 'true' },
   ]
@@ -24,7 +26,7 @@ const Sidebar = () => {
       <div
         className={`${
           open ? 'w-60' : 'w-fit'
-        } hidden sm:block relative h-screen duration-300 bg-gray-100 border-r border-gray-200 dark:border-gray-600 p-5 dark:bg-darkPurple`}
+        } hidden sm:block relative h-screen duration-300 bg-gray-100 border-r border-gray-200 dark:border-gray-600 p-5 bg-darkPurple`}
       >
         <BsArrowLeftCircle
           className={`${
@@ -36,7 +38,7 @@ const Sidebar = () => {
           <div className={`flex ${open && 'gap-x-4'} items-center`}>
             <img src={Logo} alt='' className='pl-2' />
             {open && (
-              <span className='text-xl font-medium whitespace-nowrap dark:text-white'>
+              <span className='text-xl font-medium whitespace-nowrap text-white'>
                 QuantumDB
               </span>
             )}
@@ -47,10 +49,10 @@ const Sidebar = () => {
           {Menus.map((menu, index) => (
             <Link to={menu.path} key={index}>
               <li
-                className={`flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700
+                className={`flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer text-white hover:bg-gray-700
                         ${menu.gap ? 'mt-9' : 'mt-2'} ${
                   location.pathname === menu.path &&
-                  'bg-gray-200 dark:bg-gray-700'
+                  'bg-gray-700'
                 }`}
               >
                 <span className='text-2xl'>{menu.src}</span>
@@ -77,7 +79,7 @@ const Sidebar = () => {
         <div
           className={`${
             mobileMenu ? 'flex' : 'hidden'
-          } absolute z-50 flex-col items-center self-end py-8 mt-16 space-y-6 font-bold sm:w-auto left-6 right-6 dark:text-white  bg-gray-50 dark:bg-slate-800 drop-shadow md rounded-xl`}
+          } absolute z-50 flex-col items-center self-end py-8 mt-16 space-y-6 font-bold sm:w-auto left-6 right-6 text-white bg-slate-800 drop-shadow md rounded-xl`}
         >
           {Menus.map((menu, index) => (
             <Link
@@ -88,8 +90,8 @@ const Sidebar = () => {
               <span
                 className={` ${
                   location.pathname === menu.path &&
-                  'bg-gray-200 dark:bg-gray-700'
-                } p-2 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700`}
+                  'bg-gray-700'
+                } p-2 rounded-xl hover:bg-gray-700`}
               >
                 {menu.title}
               </span>
