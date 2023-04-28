@@ -42,8 +42,3 @@ The user will be able to create, delete, acess documents using self explanatory 
  The user may aslo use multiple filters simultaneously by including additional values in the cells on the right of "OR".
 <p align = "center">
 <img src = "https://github.com/CS180-spring/cs180-23-quantum/blob/main/assets/fimga2.png">
-
-
-## Burndown Chart
-<img src = "https://github.com/CS180-spring/cs180-23-quantum/blob/main/assets/BurndownChart.PNG">
-
