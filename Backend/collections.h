@@ -25,12 +25,13 @@ public:
     
     // Function declarations
     void create_Document(int id, string content);
-    void read_Document(int id);
+    string read_Document(int id);
     void update_Document(int id, string content);
     void delete_Document(int id);
 
     //Helper functions
     Document lookup(int id);
+    string display_Documents();
 
 private:
   string name;

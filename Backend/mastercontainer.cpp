@@ -1,6 +1,6 @@
 #include "mastercontainer.h"
 #include <filesystem>
-
+#include <iostream>
 using namespace std;
 
 MasterContainer::MasterContainer() {
@@ -78,11 +78,13 @@ void MasterContainer::delete_Database(string name) {
 }
 
 //Helper functions
-void MasterContainer::readAll_Database() {
+string MasterContainer::display_Databases() {
+    string st;
     for (Database &d : databases) {
-        cout << d.getName() << " ";
+        st += d.getName() + " ";
     }
-    cout << endl;
+    st += "\n";
+    return st;
 }
 
 Database& MasterContainer::lookup(string name) {

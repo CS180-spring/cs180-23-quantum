@@ -112,10 +112,11 @@ Collection& Database::lookup (string name){
   // return c;
 }
 
-void Database::read() {
+string Database::display_Collections() {
+  string st;
   for (auto i : collections) {
-    cout << i.getName() << " ";
+    st += i.getName() + " ";
   }
-  cout << endl;
-  return;
+  st += "\n";
+  return st;
 }
