@@ -65,17 +65,19 @@ void Collection::create_Document(int id, string content) {
 }
 
 // READ DOCUMENT
-void Collection::read_Document(int id) {
+string Collection::read_Document(int id) {
   // Find document with specified ID
+  string st;
   for (Document doc : documents) {
     if (doc.getId() == id) {
-      cout << "ID: " << doc.getId() << std::endl;
-      cout << "Content: " << doc.getContent() << std::endl;
-      return;
+      st += "Content: " + doc.getContent();
+      st += "\n";
+      return st;
     }
   }
-
-  cout << "Error: document with ID " << id << " not found." << std::endl;
+  st += "Error: document with ID " + id;
+  st += " not found.\n";
+  return st;
 }
 
 // UPDATE DOCUMENT
@@ -134,4 +136,13 @@ Document Collection::lookup (int id){
     }
   }
   throw std::runtime_error("Collection not found");
+}
+
+string Collection::display_Documents() {
+  string st;
+  for (Document doc : documents) {
+    st += doc.getId();
+    st += " ";
+  }
+  return st;
 }

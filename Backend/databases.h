@@ -26,9 +26,11 @@ public:
     void create_Collection(string name);
     void update_Collection(string name, string newName);
     void delete_Collection(string name);
-    void read();
+    
     //Helper function
     Collection& lookup(string name);
+    string display_Collections();
+    
         
 private:
   string name;

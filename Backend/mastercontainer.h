@@ -15,7 +15,9 @@ class MasterContainer {
         void create_Database(string name);
         void update_Database(string name, string newName);
         void delete_Database(string name);
-        void readAll_Database();
+        
+        //Helper functions
+        string display_Databases();
         vector<Database> get();
         Database& lookup(string name);
     private:
