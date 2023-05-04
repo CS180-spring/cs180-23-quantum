@@ -1,1 +1,1 @@
-g++ collections.cpp documents.cpp mastercontainer.cpp main.cpp databases.cpp -std=c++17 -lpthread
+g++ -std=c++17 filesystemobject.cpp collection.cpp document.cpp main.cpp -lpthread
