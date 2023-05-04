@@ -16,7 +16,7 @@ const Profile = () => {
                         </span>
                         <span class="tracking-wide dark:text-white">About</span>
                     </div>
-                    <div class="dark:text-white">
+                    <div class=" text-stone-700 dark:text-white">
                         <div class="grid lg:grid-cols-2 text-sm">
                             <div class="grid grid-cols-2">
                                 <div class="px-4 py-2 font-semibold">First Name</div>

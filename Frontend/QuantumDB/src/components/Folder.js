@@ -8,7 +8,7 @@ const Folder = (props) => {
     <>
     {props.type === 'Folder' ? 
         <a href={'/database/' + props.name}>
-            <div className='flex border-2 p-3 rounded-md m-2 items-center'>
+            <div className='flex border-2 p-3 rounded-md m-2 items-center border-stone-700 dark:border-white'>
             <>
             { theme === 'dark' ? 
                 <svg fill="white" class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M0 4c0-1.1.9-2 2-2h7l2 2h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4z"></path></svg>
@@ -16,14 +16,14 @@ const Folder = (props) => {
                 <svg fill="black" class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M0 4c0-1.1.9-2 2-2h7l2 2h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4z"></path></svg>
                 }
             </>
-            <h3 className='ml-5 dark:text-white'> {props.name}</h3>
+            <h3 className='ml-5 text-stone-700 dark:text-white'> {props.name}</h3>
             </div>
         </a>
     :
         <a href='/database/json'>
-            <div className='flex border-2 p-3 rounded-md m-2 items-center'>
-            <h4 className='font-bold dark:text-white'>JSON</h4>
-            <h3 className='ml-5 dark:text-white'> {props.name}</h3>
+            <div className='flex border-2 p-3 rounded-md m-2 items-center border-stone-700 dark:border-white'>
+            <h4 className='font-bold text-stone-700 dark:text-white'>JSON</h4>
+            <h3 className='ml-5 text-stone-700 dark:text-white'> {props.name}</h3>
             </div>
         </a>
     }
