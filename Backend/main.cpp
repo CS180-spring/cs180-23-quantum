@@ -20,19 +20,6 @@ int main(){
     initializationID();
     crow::SimpleApp app; 
     Collection database("database", "../database");
-    
-    //For testing only, to remove later:
-    database.createOperation("one", ObjectType::FOLDER);
-    database.createOperation("two", ObjectType::FOLDER);
-    database.createOperation("three", ObjectType::FOLDER);
-    Collection* oneCollection = database.lookupCollection("one");
-    oneCollection->createOperation("test1", ObjectType::FOLDER);
-    oneCollection->createOperation("test2", ObjectType::FOLDER);
-    Collection* test1Collection = database.lookupCollection("one/test1");
-    test1Collection->createOperation("gc1", ObjectType::FOLDER);
-    test1Collection->createOperation("gc2", ObjectType::FILE);
-    //End of testing 
-
 
     CROW_ROUTE(app, "/")([](){
         return "Server Running.";
