@@ -23,16 +23,31 @@ const WarningNotification = (theme) => toast.warn('Please fill out the file name
     theme: theme,
 });
 
-export function CreateDocument(theme,name) {
-    const Http = new XMLHttpRequest();
-    const url='https://-/create/name/path/type';
-    Http.open("GET", url);
-    Http.send();
+const ExtensionWarning = (theme) => toast.warn('Please remove extension from name.', {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: theme,
+});
+
+export function CreateDocument(theme,name,path) {
+    if ( path === undefined){
+        path = 'database'
+    }
+    const base = 'http://ec2-3-130-207-24.us-east-2.compute.amazonaws.com:8000/create/'
+    const url = base + name +'/' + path + '/file'
     if (name === ""){
         WarningNotification(theme);
+    } else if (name.includes('.json')){
+        ExtensionWarning(theme);
     } else {
-        SuccessNotification(theme, name);
-    }    Http.onreadystatechange = (e) => {
-    console.log(Http.responseText)
+        fetch(url)
+        .then(data=>{return data.json()})
+        .then(res=>{console.log(res)})
+        .then(SuccessNotification(theme, name))
     }
 }
