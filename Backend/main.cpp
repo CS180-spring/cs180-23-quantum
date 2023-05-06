@@ -9,11 +9,10 @@ string pathDecoder(string path);
 
 /*
 TODO:
-1) Seg fault when deleting a folder with multiple children inside
-2) Permission for renaming a file with folders inside it
+1) Permission for renaming a file with folders inside it
 NOTE: Key to both is recursively deleting/renaming children
-3) Error handling for crow
-4) Returns for crow
+2) Error handling for crow
+3) Returns for crow
 */
 
 int main(){
@@ -21,6 +20,19 @@ int main(){
     initializationID();
     crow::SimpleApp app; 
     Collection database("database", "../database");
+    
+    //For testing only, to remove later:
+    database.createOperation("one", ObjectType::FOLDER);
+    database.createOperation("two", ObjectType::FOLDER);
+    database.createOperation("three", ObjectType::FOLDER);
+    Collection* oneCollection = database.lookupCollection("one");
+    oneCollection->createOperation("test1", ObjectType::FOLDER);
+    oneCollection->createOperation("test2", ObjectType::FOLDER);
+    Collection* test1Collection = database.lookupCollection("one/test1");
+    test1Collection->createOperation("gc1", ObjectType::FOLDER);
+    test1Collection->createOperation("gc2", ObjectType::FILE);
+    //End of testing 
+
 
     CROW_ROUTE(app, "/")([](){
         return "Server Running.";
@@ -62,7 +74,7 @@ int main(){
                 pathCollection->updateOperation(oldName, newName, ObjectType::FOLDER);
             } else if (type == "file"){
                 Collection* pathCollection = database.lookupCollection(decodedPath);
-                pathCollection->updateOperation(oldName, newName, ObjectType::FOLDER);
+                pathCollection->updateOperation(oldName, newName, ObjectType::FILE);
             }
         }    
 
@@ -84,7 +96,7 @@ int main(){
                 pathCollection->deleteOperation(name, ObjectType::FOLDER);
             } else if (type == "file"){
                 Collection* pathCollection = database.lookupCollection(decodedPath);
-                pathCollection->deleteOperation(name, ObjectType::FOLDER);
+                pathCollection->deleteOperation(name, ObjectType::FILE);
             }
         }    
 
@@ -92,12 +104,49 @@ int main(){
         return "Success";
     });
 
+    CROW_ROUTE(app, "/read/<string>/<string>/<string>")([&database](string name, string path, string type){
+        string decodedPath = pathDecoder(path);
+        string content;
+        if(decodedPath == "database"){
+            if(type == "folder"){
+                content = database.readOperation(name, ObjectType::FOLDER);
+            } else if (type == "file"){
+                content = database.readOperation(name, ObjectType::FILE);
+            }
+        } else {
+            if(type == "folder"){
+                Collection* pathCollection = database.lookupCollection(decodedPath);
+                content = pathCollection->readOperation(name, ObjectType::FOLDER);
+            } else if (type == "file"){
+                Collection* pathCollection = database.lookupCollection(decodedPath);
+                content = pathCollection->readOperation(name, ObjectType::FILE);
+            }
+        }    
+        cout << content;
+        //TODO: Error handling and crow return
+        return content;
+    });
+
+    CROW_ROUTE(app, "/editFile/<string>/<string>/<string>")([&database](string name, string path, string newContent){
+        string decodedPath = pathDecoder(path);
+        if(decodedPath == "database"){
+            database.editFileOperation(name, path, newContent);
+        } else {
+            Collection* pathCollection = database.lookupCollection(decodedPath);
+            pathCollection->editFileOperation(name, path, newContent);
+        }    
+
+        //TODO: Error handling and crow return
+        return "Success";
+    });
 
 
     app.port(8000).multithreaded().run();
     return 0;
 }
 
+
+//Following are helper functions for main
 void initializationID(){
     filesystem::path database_path = "../database";
     filesystem::create_directory(database_path);

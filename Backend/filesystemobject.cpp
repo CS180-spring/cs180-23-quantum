@@ -1,4 +1,4 @@
-#include "FilesystemObject.h"
+#include "Filesystemobject.h"
 #include <filesystem>
 #include <fstream>
 
@@ -99,18 +99,23 @@ int FilesystemObject::incrementID() {
 
 
 //Delete virtual child
-void FilesystemObject::deleteChild(FilesystemObject* &child, vector<FilesystemObject*> &children, int i) {
+void FilesystemObject::deleteChild(FilesystemObject* &child, vector<FilesystemObject*> &children) {
   if (child->children.size() == 0) {
-    delete child;
-    children.erase(children.begin()+i);
-    return;
+    auto it = find(children.begin(), children.end(), child);
+    if(it != children.end()){
+        children.erase(it);
+        delete child;
+    }
   }
   else {
-    // Go into children and delete all recursively
-    int j = 0;
     for (auto ch : child->getChildren()) {
-      child->deleteChild(ch, ch->children, j);
-      j++;
+      child->deleteChild(ch, child->children);
+    }
+    // After all children have been deleted, delete the child itself and remove it from parent's children vector
+    auto it = find(children.begin(), children.end(), child);
+    if (it != children.end()) {
+      children.erase(it);
+      delete child;
     }
   }
 }

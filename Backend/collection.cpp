@@ -142,12 +142,11 @@ int Collection::updateOperation(string oldName, string newName, ObjectType type)
 int Collection::deleteOperation(string name, ObjectType type) {
   if(type == ObjectType::FOLDER){
     // Delete Collection with specified name
-    int i = 0;
     bool found = false;
     for (auto& child : this->getChildren()) {
       if (child->getName() == name) {
         if (type == ObjectType::FOLDER){
-          this->deleteChild(child, children, i);    
+          this->deleteChild(child, children);
           }
           //System commands
           filesystem::path dir_path = this->path + "/" + name;
@@ -161,18 +160,16 @@ int Collection::deleteOperation(string name, ObjectType type) {
           }
           found = true;
         }
-      i++;
     }
     if (!found) cout << "Error: Collection with name " << name << " does not exist." << endl;
     return -1;
   } else if (type == ObjectType::FILE){
     // Delete Collection with specified name
-    int i = 0;
     bool found = false;
     for (auto& child : this->getChildren()) {
       if (child->getName() == name) {
         if (type == ObjectType::FILE){
-          this->deleteChild(child, children, i);                
+          this->deleteChild(child, children);                
           //System commands
           filesystem::path dir_path = this->path + "/" + name + ".json";
           error_code ec;
@@ -186,12 +183,89 @@ int Collection::deleteOperation(string name, ObjectType type) {
           found = true;
         }
       }
-      i++;
     }
     if (!found) cout << "Error: Document with name " << name << " does not exist." << endl;
     return -1;
   }
   return -1;
+}
+
+//Read a collection
+string Collection::readOperation(string name, ObjectType type) {
+  if(type == ObjectType::FOLDER){
+    // Read contents of a collection with specified name
+    string str;
+    for (auto& child : this->getChildren()) {
+        if (child->getType() == ObjectType::FOLDER){
+          str = str + child->getName();
+          str = str + "-";
+        } else if (child->getType() == ObjectType::FILE){
+          str = str + child->getName();
+          str = str + ".json-";
+        }
+    }
+    return str;
+  } 
+  else if (type == ObjectType::FILE){
+    // Read contents of a file with specified name
+    string str;
+    for (auto& child : this->getChildren()) {
+      if (child->getName() == name) {
+        if (type == ObjectType::FILE){
+          Document* doc = dynamic_cast<Document*>(child);
+          if(doc != nullptr){
+            str = doc->getContent();
+          } else {
+            str = "Something went wrong.";
+          }
+          break;
+        }
+      }
+    }
+    return str;
+  }
+  return "File was not read properly.";
+}
+
+//Update file content
+int Collection::editFileOperation(string name, string path, string newContent){
+  bool found = false;
+  for (auto& child : this->getChildren()) {
+    if (child->getName() == name && child->getType() == ObjectType::FILE) {
+      Document* doc = dynamic_cast<Document*>(child);
+      doc->setContent(newContent);
+      
+      //System commands
+      string file_path = "../database/" + this->path + "/" + name + ".json";
+      /*
+        Comments regarding the next 2 lines of code:
+        When new content is passed in, it will have "%20" instead of space, 
+        and "%0A" instead of new lines. The two following lines will replace those
+        You can add or edit later if needed. This is so that you can literally 
+        have spaces in the crow route. 
+        Edit this comment if needed as well.
+      */
+      string content = regex_replace(newContent, regex("%20"), " ");
+      content = regex_replace(content, regex("%0A"), "\n");
+
+      ofstream file(file_path);
+      if (file.is_open()){
+        file << content;
+        file.close();
+        cout << "Document content changed successfully." << endl;
+      }
+      else {
+        cout << "Error: Unable to open file." << endl;
+        return -1;
+      }
+      found = true;
+    }
+  }
+  if (!found) {
+    cout << "Error: Document with name " << name << " does not exist." << endl;
+    return -1;
+  }
+  return 0;
 }
 
 //Lookup collection
@@ -219,7 +293,6 @@ Collection* Collection::lookupCollection(string path) {
             }
         }
         if (!found) {
-          cout << "PATH: " << path << endl;
           throw runtime_error("Collection not found: " + path);
         }
     }
