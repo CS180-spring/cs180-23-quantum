@@ -1,5 +1,6 @@
 #include "collection.h"
 #include "crow.h"
+#include <crow/middlewares/cors.h>
 
 using namespace std;
 
@@ -18,7 +19,23 @@ NOTE: Key to both is recursively deleting/renaming children
 int main(){
     initialization();
     initializationID();
-    crow::SimpleApp app; 
+
+    crow::App<crow::CORSHandler> app;
+    auto& cors = app.get_middleware<crow::CORSHandler>();
+    // clang-format off
+    cors
+      .global()
+        .headers("X-Custom-Header", "Access-Control-Allow-Origin")
+        .methods("POST"_method, "GET"_method)
+      .prefix("/cors")
+        .origin("example.com")
+      .prefix("/nocors")
+        .ignore();
+    // clang-format on
+
+    system("rm -r ../database");
+    system("mkdir ../database");
+    
     Collection database("database", "../database");
 
     CROW_ROUTE(app, "/")([](){
