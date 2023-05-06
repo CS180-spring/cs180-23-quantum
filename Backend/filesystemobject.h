@@ -51,7 +51,7 @@ class FilesystemObject {
         // Other functions
         //Move to Collection? string displayContents();
         int incrementID();
-        void deleteChild(FilesystemObject* &child, vector<FilesystemObject*> &children, int i);
+        void deleteChild(FilesystemObject* &child, vector<FilesystemObject*> &children);
 
     protected:
         int id;
