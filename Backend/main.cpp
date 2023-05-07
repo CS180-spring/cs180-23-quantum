@@ -33,9 +33,6 @@ int main(){
         .ignore();
     // clang-format on
 
-    system("rm -r ../database");
-    system("mkdir ../database");
-    
     Collection database("database", "../database");
 
     CROW_ROUTE(app, "/")([](){
