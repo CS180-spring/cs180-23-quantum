@@ -1,4 +1,4 @@
-#include "Filesystemobject.h"
+#include "filesystemobject.h"
 #include <filesystem>
 #include <fstream>
 
