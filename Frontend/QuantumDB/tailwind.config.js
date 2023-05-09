@@ -10,6 +10,7 @@ module.exports = {
                 black: '#09090c',
                 darkGray: '#121212',
 
+                medBlue: 'hsl(203, 85%, 54%)',
                 brightRed: 'hsl(12, 88%, 59%)',
                 brightRedLight: 'hsl(12, 88%, 69%)',
                 brightRedSupLight: 'hsl(12, 88%, 95%)',

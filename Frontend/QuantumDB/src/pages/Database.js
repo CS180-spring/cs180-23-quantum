@@ -20,7 +20,7 @@ const Database = () => {
     const {theme} = useContext(ThemeContext)
 
     const fetchData = useCallback( async () => {
-        const url = 'http://ec2-3-130-207-24.us-east-2.compute.amazonaws.com:8000/read/database/database/folder'
+        const url = 'http://ec2-3-145-4-143.us-east-2.compute.amazonaws.com:8000/read/database/database/folder'
         const data = await axios.get(url)
             .then(function (response) {
                 const objects = response.data.toString().split('-');
@@ -54,7 +54,7 @@ const Database = () => {
         <h2 className='text-xl p-2 text-stone-700 font-medium dark:text-white'>
         Collections
         </h2>
-        <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
+        <div className='grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
             {data && data.filter(checkFolder).length>0 
             ? 
             data.map((e)=>{
@@ -68,7 +68,7 @@ const Database = () => {
         <h2 className='mt-10 text-xl p-2 text-stone-700 font-medium dark:text-white'>
         Documents
         </h2>
-        <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
+        <div className='grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
             {data && data.filter(checkDoc).length>0 
             ? 
             data.map((e)=>{
@@ -79,7 +79,7 @@ const Database = () => {
             <h3 className='p-2'>No documents saved in the database.</h3>
             }
         </div>
-        <div className='fixed bottom-0 p-5'>
+        <div className='fixed bottom-0 p-2 mb-2'>
             <Operations refresh={fetchData} />
         </div>
     </>
