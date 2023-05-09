@@ -192,39 +192,50 @@ int Collection::deleteOperation(string name, ObjectType type) {
 
 //Read a collection
 string Collection::readOperation(string name, ObjectType type) {
+  // Read contents of a collection with specified name
+  // Name does not matter here, only path matters.
+  string str;
   if(type == ObjectType::FOLDER){
-    // Read contents of a collection with specified name
-    string str;
     for (auto& child : this->getChildren()) {
-        if (child->getType() == ObjectType::FOLDER){
-          str = str + child->getName();
-          str = str + "-";
-        } else if (child->getType() == ObjectType::FILE){
-          str = str + child->getName();
-          str = str + ".json-";
-        }
+      if (child->getType() == ObjectType::FOLDER){
+        str = str + child->getName();
+        str = str + "-";
+      } else if (child->getType() == ObjectType::FILE){
+        str = str + child->getName();
+        str = str + ".json-";
+      }
     }
     return str;
   } 
   else if (type == ObjectType::FILE){
     // Read contents of a file with specified name
+    // Name does matter here since this is a file.
     string str;
+    bool found = false;
     for (auto& child : this->getChildren()) {
       if (child->getName() == name) {
         if (type == ObjectType::FILE){
+          found == true;
           Document* doc = dynamic_cast<Document*>(child);
           if(doc != nullptr){
             str = doc->getContent();
+            return str;
           } else {
             str = "Something went wrong.";
+            cout << str;
+            return "Error";
           }
           break;
         }
       }
     }
+    if (!found){
+      return "Error";
+    }
     return str;
   }
-  return "File was not read properly.";
+  cout << "File was not read properly.";
+  return "Error";
 }
 
 //Update file content

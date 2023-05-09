@@ -36,78 +36,93 @@ int main(){
     Collection database("database", "../database");
 
     CROW_ROUTE(app, "/")([](){
-        return "Server Running.";
+        return crow::response(200, "Server running.");
     });
 
     CROW_ROUTE(app, "/create/<string>/<string>/<string>")([&database](string name, string path, string type){
+        int error = -1;
         string decodedPath = pathDecoder(path);
         if(decodedPath == "database"){
             if(type == "folder"){
-                database.createOperation(name, ObjectType::FOLDER);
+                error = database.createOperation(name, ObjectType::FOLDER);
             } else if (type == "file"){
-                database.createOperation(name, ObjectType::FILE);
+                error = database.createOperation(name, ObjectType::FILE);
             }
         } else {
             if(type == "folder"){
                 Collection* pathCollection = database.lookupCollection(decodedPath);
-                pathCollection->createOperation(name, ObjectType::FOLDER);
+                error = pathCollection->createOperation(name, ObjectType::FOLDER);
             } else if (type == "file"){
                 Collection* pathCollection = database.lookupCollection(decodedPath);
-                pathCollection->createOperation(name, ObjectType::FILE);
+                error = pathCollection->createOperation(name, ObjectType::FILE);
             }
         }    
 
-        //TODO: Error handling and crow return
-        return "Success";
+        if (error == -1){
+            return crow::response(400);
+        } else if (error == 0){
+            return crow::response(200);
+        }
+        return crow::response(400);
     });
 
     CROW_ROUTE(app, "/update/<string>/<string>/<string>/<string>")([&database](string oldName, string newName, string path, string type){
+        int error = -1;
         string decodedPath = pathDecoder(path);
         if(decodedPath == "database"){
             if(type == "folder"){
-                database.updateOperation(oldName, newName, ObjectType::FOLDER);
+                error = database.updateOperation(oldName, newName, ObjectType::FOLDER);
             } else if (type == "file"){
-                database.updateOperation(oldName, newName, ObjectType::FILE);
+                error = database.updateOperation(oldName, newName, ObjectType::FILE);
             }
         } else {
             if(type == "folder"){
                 Collection* pathCollection = database.lookupCollection(decodedPath);
-                pathCollection->updateOperation(oldName, newName, ObjectType::FOLDER);
+                error = pathCollection->updateOperation(oldName, newName, ObjectType::FOLDER);
             } else if (type == "file"){
                 Collection* pathCollection = database.lookupCollection(decodedPath);
-                pathCollection->updateOperation(oldName, newName, ObjectType::FILE);
+                error = pathCollection->updateOperation(oldName, newName, ObjectType::FILE);
             }
-        }    
+        }  
 
-        //TODO: Error handling and crow return
-        return "Success";
+        if (error == -1){
+            return crow::response(400);
+        } else if (error == 0){
+            return crow::response(200);
+        }
+        return crow::response(400);
     });
 
     CROW_ROUTE(app, "/delete/<string>/<string>/<string>")([&database](string name, string path, string type){
+        int error = -1;
         string decodedPath = pathDecoder(path);
         if(decodedPath == "database"){
             if(type == "folder"){
-                database.deleteOperation(name, ObjectType::FOLDER);
+                error = database.deleteOperation(name, ObjectType::FOLDER);
             } else if (type == "file"){
-                database.deleteOperation(name, ObjectType::FILE);
+                error = database.deleteOperation(name, ObjectType::FILE);
             }
         } else {
             if(type == "folder"){
                 Collection* pathCollection = database.lookupCollection(decodedPath);
-                pathCollection->deleteOperation(name, ObjectType::FOLDER);
+                error = pathCollection->deleteOperation(name, ObjectType::FOLDER);
             } else if (type == "file"){
                 Collection* pathCollection = database.lookupCollection(decodedPath);
-                pathCollection->deleteOperation(name, ObjectType::FILE);
+                error = pathCollection->deleteOperation(name, ObjectType::FILE);
             }
         }    
 
-        //TODO: Error handling and crow return
-        return "Success";
+        if (error == -1){
+            return crow::response(400);
+        } else if (error == 0){
+            return crow::response(200);
+        }
+        return crow::response(400);
     });
 
     CROW_ROUTE(app, "/read/<string>/<string>/<string>")([&database](string name, string path, string type){
         string decodedPath = pathDecoder(path);
-        string content;
+        string content = "Error";
         if(decodedPath == "database"){
             if(type == "folder"){
                 content = database.readOperation(name, ObjectType::FOLDER);
@@ -123,22 +138,32 @@ int main(){
                 content = pathCollection->readOperation(name, ObjectType::FILE);
             }
         }    
-        cout << content;
-        //TODO: Error handling and crow return
-        return content;
+        
+        if (content == "Error"){
+            return crow::response(400, content);
+        } else {
+            cout << "CONTENT: " << content;
+            return crow::response(200, content);
+        }
+        return crow::response(400);
     });
 
     CROW_ROUTE(app, "/editFile/<string>/<string>/<string>")([&database](string name, string path, string newContent){
+        int error = -1;
         string decodedPath = pathDecoder(path);
         if(decodedPath == "database"){
-            database.editFileOperation(name, path, newContent);
+            error = database.editFileOperation(name, path, newContent);
         } else {
             Collection* pathCollection = database.lookupCollection(decodedPath);
-            pathCollection->editFileOperation(name, path, newContent);
+            error = pathCollection->editFileOperation(name, path, newContent);
         }    
 
-        //TODO: Error handling and crow return
-        return "Success";
+        if (error == -1){
+            return crow::response(400);
+        } else if (error == 0){
+            return crow::response(200);
+        }
+        return crow::response(400);
     });
 
 
