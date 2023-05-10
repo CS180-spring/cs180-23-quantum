@@ -43,18 +43,18 @@ int Collection::createOperation(string name, ObjectType type) {
     filesystem::path dir_path = this->path + "/" + name;
     error_code ec;
     if (filesystem::create_directory(dir_path, ec)) {
-        cout << "Collection created successfully!" << endl;
+        cout << "Collection with name " << name << " created successfully." << endl;
         return 0;
     } else {
         cout << "Collection creation failed: " << ec.message() << endl;
-        return -1;
+        return -2;
     }
   } else if(type == ObjectType::FILE){
     for (auto& child : this->getChildren()) {
       if (child->getName() == name) {
         if (child->getType() == ObjectType::FILE){
           cout << "Error: file with name " << name << " already exists." << endl;
-          return -1;
+          return -3;
         }
       }
     }   
@@ -71,13 +71,13 @@ int Collection::createOperation(string name, ObjectType type) {
         outfile << "";
         outfile.close();
         cout << "Document with name " << name << " created successfully." << endl;
-        return 0;
+        return 1;
     } else {
         cout << "Failed to create document with name " << name << endl;
-        return -1;
+        return -4;
     }
   }
-  return -1;
+  return -5;
 }
 
 //Update a collection
@@ -115,8 +115,9 @@ int Collection::updateOperation(string oldName, string newName, ObjectType type)
         if(type == ObjectType::FILE){
           child->setName(newName);
           //System commands
-          string old_path = "../database/" + this->path + "/" + oldName + ".json";
-          string new_path = "../database/" + this->path + "/" + newName + ".json";
+          cout <<  this->path;
+          string old_path = this->path + "/" + oldName + ".json";
+          string new_path = this->path + "/" + newName + ".json";
           try {
               filesystem::rename(old_path, new_path);
               cout << "Document renamed to " << newName << " successfully." << endl;
@@ -162,7 +163,7 @@ int Collection::deleteOperation(string name, ObjectType type) {
         }
     }
     if (!found) cout << "Error: Collection with name " << name << " does not exist." << endl;
-    return -1;
+    return -2;
   } else if (type == ObjectType::FILE){
     // Delete Collection with specified name
     bool found = false;
@@ -175,19 +176,19 @@ int Collection::deleteOperation(string name, ObjectType type) {
           error_code ec;
           if (filesystem::remove_all(dir_path, ec)) {
               cout << "Document deleted successfully!" << endl;
-              return 0;
+              return 1;
           } else {
               cout << "Document deletion failed: " << ec.message() << endl;
-              return -1;
+              return -3;
           }
           found = true;
         }
       }
     }
     if (!found) cout << "Error: Document with name " << name << " does not exist." << endl;
-    return -1;
+    return -4;
   }
-  return -1;
+  return -5;
 }
 
 //Read a collection
@@ -230,11 +231,11 @@ string Collection::readOperation(string name, ObjectType type) {
       }
     }
     if (!found){
-      return "Error";
+      return "File not Found.";
     }
     return str;
   }
-  cout << "File was not read properly.";
+  cout << "An unexpcted event happened.";
   return "Error";
 }
 
@@ -264,6 +265,7 @@ int Collection::editFileOperation(string name, string path, string newContent){
         file << content;
         file.close();
         cout << "Document content changed successfully." << endl;
+        return 0;
       }
       else {
         cout << "Error: Unable to open file." << endl;
@@ -274,9 +276,9 @@ int Collection::editFileOperation(string name, string path, string newContent){
   }
   if (!found) {
     cout << "Error: Document with name " << name << " does not exist." << endl;
-    return -1;
+    return -2;
   }
-  return 0;
+  return -3;
 }
 
 //Lookup collection

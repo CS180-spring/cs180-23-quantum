@@ -1,4 +1,5 @@
 #include "collection.h"
+#include "query.h"
 #include "crow.h"
 #include <crow/middlewares/cors.h>
 
@@ -10,10 +11,9 @@ string pathDecoder(string path);
 
 /*
 TODO:
-1) Permission for renaming a file with folders inside it
-NOTE: Key to both is recursively deleting/renaming children
-2) Error handling for crow
-3) Returns for crow
+1)  Permission for renaming a file with folders inside it
+2)  Should not be able to rename a file to a name that already exists among its siblings 
+    (aka for each child in children: newName != child->name)
 */
 
 int main(){
@@ -35,8 +35,15 @@ int main(){
 
     Collection database("database", "../database");
 
+    //For testing only
+    database.createOperation("one", ObjectType::FOLDER);
+    database.createOperation("two", ObjectType::FOLDER);
+    database.createOperation("three", ObjectType::FOLDER);
+    database.createOperation("one", ObjectType::FILE);
+    //End of test zone
+
     CROW_ROUTE(app, "/")([](){
-        return crow::response(200, "Server running.");
+        return "Server Running.";
     });
 
     CROW_ROUTE(app, "/create/<string>/<string>/<string>")([&database](string name, string path, string type){
@@ -58,12 +65,41 @@ int main(){
             }
         }    
 
+        string messageContent;
+
         if (error == -1){
-            return crow::response(400);
+            messageContent = "Collection with name ";
+            messageContent += name;
+            messageContent += " already exists.";
+            return crow::response(400, messageContent);
+        } else if (error == -2){
+            messageContent = "Collection creation failed.";
+            return crow::response(400, messageContent);
         } else if (error == 0){
-            return crow::response(200);
+            messageContent = "Collection with name ";
+            messageContent += name;
+            messageContent += " created successfully.";
+            return crow::response(200, messageContent);
+        } else if (error == -3){
+            messageContent = "File with name ";
+            messageContent += name;
+            messageContent += " already exists.";
+            return crow::response(400, messageContent);
+        } else if (error == 1){
+            messageContent = "File with name ";
+            messageContent += name;
+            messageContent += " created successfully.";
+            return crow::response(200, messageContent);
+        } else if (error == -4){
+            messageContent = "Failed to create file with name ";
+            messageContent += name;
+            messageContent += ".";
+            return crow::response(400, messageContent);
+        } else if (error == -5){
+            messageContent = "Something unexpected happened.";
+            return crow::response(400, messageContent);
         }
-        return crow::response(400);
+        return crow::response(400, "Something unexpected happened.");
     });
 
     CROW_ROUTE(app, "/update/<string>/<string>/<string>/<string>")([&database](string oldName, string newName, string path, string type){
@@ -112,12 +148,35 @@ int main(){
             }
         }    
 
+        string messageContent;
+
         if (error == -1){
-            return crow::response(400);
+            messageContent = "Collection deletion failed.";
+            return crow::response(400, messageContent);
         } else if (error == 0){
-            return crow::response(200);
+            messageContent = "Collection deleted successfully.";
+            return crow::response(200, messageContent);
+        } else if (error == -2){
+            messageContent = "Collection with name ";
+            messageContent += name;
+            messageContent += " does not exist.";
+            return crow::response(400, messageContent);    
+        } else if (error == 1){
+            messageContent = "File deleted successfully.";
+            return crow::response(200, messageContent);
+        } else if (error == -3){
+            messageContent = "File deletion failed.";
+            return crow::response(400, messageContent);
+        } else if (error == -4){
+            messageContent = "File with name ";
+            messageContent += name;
+            messageContent += " does not exist.";
+            return crow::response(400, messageContent);
+        } else if (error == -5){
+            messageContent = "Something unexpected happened.";
+            return crow::response(400, messageContent);
         }
-        return crow::response(400);
+        return crow::response(400, "Something unexpected happened.");
     });
 
     CROW_ROUTE(app, "/read/<string>/<string>/<string>")([&database](string name, string path, string type){
@@ -140,9 +199,10 @@ int main(){
         }    
         
         if (content == "Error"){
+            return crow::response(400, "An unexpcted event happened.");
+        } else if (content == "File not Found."){
             return crow::response(400, content);
         } else {
-            cout << "CONTENT: " << content;
             return crow::response(200, content);
         }
         return crow::response(400);
@@ -158,12 +218,45 @@ int main(){
             error = pathCollection->editFileOperation(name, path, newContent);
         }    
 
+        string messageContent;
+
         if (error == -1){
-            return crow::response(400);
+            messageContent = "Unable to open file.";
+            return crow::response(400, messageContent);
         } else if (error == 0){
-            return crow::response(200);
+            messageContent = "File content changed successfully.";
+            return crow::response(200, messageContent);
+        } else if (error == -2){
+            messageContent = "File with name ";
+            messageContent += name;
+            messageContent += " does not exist.";
+            return crow::response(400, messageContent);
+        } else if (error == -3){
+            messageContent = "Something unexpected happened.";
+            return crow::response(400, messageContent);
         }
-        return crow::response(400);
+        return crow::response(400, "Something unexpected happened.");
+    });
+
+    CROW_ROUTE(app, "/search/<string>/<string>")([&database](string name, string path){
+        string decodedPath = pathDecoder(path);
+        vector<string> results;
+        Query Q;
+        if(decodedPath == "database"){
+            Q.search(name, path, database, results);
+        } else {
+            Collection* pathCollection = database.lookupCollection(decodedPath);
+            Q.search(name, path, *pathCollection, results);
+        }
+
+        string result;
+        for(int i = 0; i < results.size(); i++){
+            result += results.at(i);
+            result += ",";
+        }
+
+        //TODO: Error handling
+        return crow::response(200, result);
     });
 
 
