@@ -52,6 +52,7 @@ class FilesystemObject {
         //Move to Collection? string displayContents();
         int incrementID();
         void deleteChild(FilesystemObject* &child, vector<FilesystemObject*> &children);
+        void renameChildren(FilesystemObject* &child, string newPath, string oldPath);
 
     protected:
         int id;

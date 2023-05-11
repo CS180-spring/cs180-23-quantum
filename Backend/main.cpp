@@ -11,9 +11,8 @@ string pathDecoder(string path);
 
 /*
 TODO:
-1)  Permission for renaming a file with folders inside it
-2)  Should not be able to rename a file to a name that already exists among its siblings 
-    (aka for each child in children: newName != child->name)
+1) Permission for renaming a file with folders inside it
+2) Recursively go through all children and change their path to reflect the renamed folder
 */
 
 int main(){
@@ -95,9 +94,6 @@ int main(){
             messageContent += name;
             messageContent += ".";
             return crow::response(400, messageContent);
-        } else if (error == -5){
-            messageContent = "Something unexpected happened.";
-            return crow::response(400, messageContent);
         }
         return crow::response(400, "Something unexpected happened.");
     });
@@ -121,12 +117,40 @@ int main(){
             }
         }  
 
+        string messageContent;
+
         if (error == -1){
-            return crow::response(400);
+            messageContent = "Collection with name ";
+            messageContent += newName;
+            messageContent += " already exists.";
+            return crow::response(400, messageContent);
         } else if (error == 0){
-            return crow::response(200);
+            messageContent = "Collection renamed to ";
+            messageContent += newName;
+            messageContent += " successfully.";
+            return crow::response(200, messageContent);
+        } else if (error == -3){
+            messageContent = "Collection with name "; 
+            messageContent += oldName; 
+            messageContent += " does not exist.";
+            return crow::response(400, messageContent);
+        } else if (error == 1){
+            messageContent = "Document renamed to ";
+            messageContent += newName;
+            messageContent += " successfully.";
+            return crow::response(200, messageContent);
+        } else if (error == -6){
+            messageContent = "Document with name ";
+            messageContent += oldName;
+            messageContent += " does not exist.";
+            return crow::response(400, messageContent);
+        } else if (error == -7){
+            messageContent = "Document with name ";
+            messageContent += newName;
+            messageContent += " already exists.";
+            return crow::response(400, messageContent);
         }
-        return crow::response(400);
+        return crow::response(400, "Something unexpected happened.");
     });
 
     CROW_ROUTE(app, "/delete/<string>/<string>/<string>")([&database](string name, string path, string type){
@@ -171,9 +195,6 @@ int main(){
             messageContent = "File with name ";
             messageContent += name;
             messageContent += " does not exist.";
-            return crow::response(400, messageContent);
-        } else if (error == -5){
-            messageContent = "Something unexpected happened.";
             return crow::response(400, messageContent);
         }
         return crow::response(400, "Something unexpected happened.");
@@ -230,9 +251,6 @@ int main(){
             messageContent = "File with name ";
             messageContent += name;
             messageContent += " does not exist.";
-            return crow::response(400, messageContent);
-        } else if (error == -3){
-            messageContent = "Something unexpected happened.";
             return crow::response(400, messageContent);
         }
         return crow::response(400, "Something unexpected happened.");
