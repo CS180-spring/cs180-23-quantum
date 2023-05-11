@@ -1,5 +1,6 @@
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
 
 const SuccessNotification = (theme, name) => toast.success('Document: ' + name +' Created!', {
     position: "bottom-right",
@@ -12,18 +13,7 @@ const SuccessNotification = (theme, name) => toast.success('Document: ' + name +
     theme: theme,
 });
 
-const WarningNotification = (theme) => toast.warn('Please fill out the file name.', {
-    position: "bottom-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: theme,
-});
-
-const ExtensionWarning = (theme) => toast.warn('Please remove extension from name.', {
+const WarningNotification = (theme,err) => toast.warn(err, {
     position: "bottom-right",
     autoClose: 5000,
     hideProgressBar: false,
@@ -38,15 +28,15 @@ export function CreateDocument(theme,name,path) {
     if ( path === undefined){
         path = 'database'
     }
-    const base = 'http://ec2-3-145-4-143.us-east-2.compute.amazonaws.com:8000/create/'
+    const base = 'http://ec2-18-224-39-255.us-east-2.compute.amazonaws.com:8000/create/'
     const url = base + name +'/' + path + '/file'
     if (name === ""){
-        WarningNotification(theme);
+        WarningNotification(theme,'Please fill out the file name.');
     } else if (name.includes('.json')){
-        ExtensionWarning(theme);
+        WarningNotification(theme,'Please remove extension from name.');
     } else {
-        fetch(url)
-        .then(data=>{return data.json()})
+        axios.get(url)
+        .catch(error=>WarningNotification(theme,error))
         .then(res=>{console.log(res)})
         .then(SuccessNotification(theme, name))
     }

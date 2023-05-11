@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SuccessNotification = (theme, name) => toast.success('Folder successfully renamed!', {
     position: "bottom-right",
@@ -22,30 +24,21 @@ const WarningNotification = (theme,err) => toast.warn(err, {
     theme: theme,
 });
 
-const ExtensionWarning = (theme) => toast.warn('Please remove extension from name.', {
-    position: "bottom-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: theme,
-});
-
-export async function UpdateCollection(oldName,newName,path,type) {
-    const base = 'http://ec2-3-130-207-24.us-east-2.compute.amazonaws.com:8000/update/'
+export async function UpdateFolder(theme,oldName,newName,path) {
+    const base = 'http://ec2-18-224-39-255.us-east-2.compute.amazonaws.com:8000/update/'
+    if ( path === undefined){
+        path = 'database'
+    }
     const url = base + oldName + '/' + newName + '/' + path + '/folder'
     if (newName === ""){
         WarningNotification(theme, 'Please fill out the folder name.');
     } else if (newName.includes('.json')){
-        ExtensionWarning(theme);
+        WarningNotification(theme, 'Please remove extension from name.');
     }
     else{
         axios.get(url)
-        .then(data=>{return data.json()})
+        .catch(error=>WarningNotification(theme,error))
         .then(res=>{console.log(res)})
         .then(SuccessNotification(theme,oldName))
-        .catch(error=>WarningNotification(theme,error))
     }
 }
