@@ -119,3 +119,18 @@ void FilesystemObject::deleteChild(FilesystemObject* &child, vector<FilesystemOb
     }
   }
 }
+
+void FilesystemObject::renameChildren(FilesystemObject* &child, string newPath, string oldPath) {
+    for (auto& ch : child->getChildren()) { 
+        if (ch->getChildren().size() == 0) {
+            string modifiedPath = ch->getPath();
+            int pos = modifiedPath.find(oldPath);
+            if (pos != string::npos) {
+                modifiedPath.replace(pos, oldPath.length(), newPath);
+                ch->setPath(modifiedPath);
+            }
+        } else if (ch->getChildren().size() != 0) {
+            renameChildren(ch, newPath, oldPath);
+        }
+    }
+}
