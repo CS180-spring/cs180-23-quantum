@@ -115,18 +115,12 @@ int Collection::updateOperation(string oldName, string newName, ObjectType type)
 
           //Change path of all children
           this->renameChildren(child, newPath, oldPath);
-          
-
-
-
-
-          
+  
           //System commands
-          //PERMISSION BUG
           string old_path = this->path + "/" + oldName;
           string new_path = this->path + "/" + newName;
           try {
-            filesystem::permissions(old_path, filesystem::perms::owner_all | filesystem::perms::group_all | filesystem::perms::others_all);
+            // filesystem::permissions(old_path, filesystem::perms::owner_all | filesystem::perms::group_all | filesystem::perms::others_all);
             filesystem::rename(old_path, new_path);
             cout << "Collection renamed to " << newName << " successfully." << endl;
             return 0;
@@ -134,12 +128,6 @@ int Collection::updateOperation(string oldName, string newName, ObjectType type)
             cout << "Collection renaming failed: " << e.what() << endl;
             return -2;
           }
-          //END OF PERMISSION BUG
-
-
-
-
-
           found = true;
         }
       }
