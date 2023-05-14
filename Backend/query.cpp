@@ -3,7 +3,7 @@
 
 void Query::search(string name, string path, Collection& currCollection, vector<string> &results) {
     for (auto child : currCollection.getChildren()) {
-        if(child->getName() == name && child->getType() == ObjectType::FOLDER){
+        if(!(child->getName().find(name)) && child->getType() == ObjectType::FOLDER){
             string str = child->getPath();
             
             //Per request from the frontend team:
@@ -11,7 +11,7 @@ void Query::search(string name, string path, Collection& currCollection, vector<
 
             results.push_back(str);
         }
-        if(child->getName() == name && child->getType() == ObjectType::FILE){
+        if(!(child->getName().find(name)) && child->getType() == ObjectType::FILE){
             string str = child->getPath();
             
             //Per request from the frontend team:

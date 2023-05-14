@@ -8,12 +8,8 @@ using namespace std;
 void initializationID();
 void initialization();
 string pathDecoder(string path);
+void zipDirectory(string name, string directoryPath);
 
-/*
-TODO:
-1) Permission for renaming a file with folders inside it
-2) Recursively go through all children and change their path to reflect the renamed folder
-*/
 
 int main(){
     initialization();
@@ -34,12 +30,15 @@ int main(){
 
     Collection database("database", "../database");
 
-    //For testing only
-    database.createOperation("one", ObjectType::FOLDER);
-    database.createOperation("two", ObjectType::FOLDER);
-    database.createOperation("three", ObjectType::FOLDER);
-    database.createOperation("one", ObjectType::FILE);
-    //End of test zone
+    // //For testing only
+    // database.createOperation("one", ObjectType::FOLDER);
+    // Collection* test1Collection = database.lookupCollection("one");
+    // test1Collection->createOperation("test1", ObjectType::FOLDER);
+    // test1Collection->createOperation("test1", ObjectType::FILE);
+    // database.createOperation("two", ObjectType::FOLDER);
+    // database.createOperation("three", ObjectType::FOLDER);
+    // database.createOperation("one", ObjectType::FILE);
+    // //End of test zone
 
     CROW_ROUTE(app, "/")([](){
         return "Server Running.";
@@ -277,6 +276,121 @@ int main(){
         return crow::response(200, result);
     });
 
+    CROW_ROUTE(app, "/download/<string>/<string>/<string>")([&database](string name, string path, string type){
+        string decodedPath = pathDecoder(path);
+        string directoryPath;
+        if(decodedPath == "database"){
+            directoryPath = "../database/" + name;
+        } else {
+            directoryPath = "../database/" + decodedPath + "/" + name;
+        }
+        if(type == "folder"){
+            //Zip the folder
+            zipDirectory(name, directoryPath);
+
+            //Send the file over
+            ifstream file(directoryPath+".zip", ios::binary);
+            if (file.good()) {
+                std::ostringstream contents;
+                contents << file.rdbuf();
+                crow::response res(contents.str());
+                res.set_header("Content-Disposition", "attachment; filename=\"" + name + ".zip\"");
+                res.set_header("Content-Type", "application/zip");
+                
+                //Delete the zip file
+                string command = "rm " + directoryPath + ".zip";
+                system(command.c_str());
+                
+                return res;
+            } else {
+                return crow::response(404);
+            }
+        } else if (type == "file"){
+            directoryPath += ".json";
+            ifstream file(directoryPath);
+            if (file.good()) {
+                ostringstream contents;
+                contents << file.rdbuf();
+                crow::response res(contents.str());
+                res.set_header("Content-Disposition", "attachment; filename=\"" + name + ".json\"");
+                res.set_header("Content-Type", "application/json");
+                return res;
+            } else {
+                return crow::response(404);
+            }
+        }
+        return crow::response(404);
+    });
+
+    CROW_ROUTE(app, "/import/<string>/<string>/<string>/<string>")([&database](string name, string path, string type, string content){
+        int createError = -99;
+        int editError = -99; 
+        string decodedPath = pathDecoder(path);
+        if(decodedPath == "database"){
+            if(type == "folder"){
+                //To be implemented if time permits
+            } else if (type == "file"){
+                createError = database.createOperation(name, ObjectType::FILE);
+                editError = database.editFileOperation(name, path, content);
+            }
+        } else {
+            if(type == "folder"){
+                //To be implemented if time permits
+            } else if (type == "file"){
+                Collection* pathCollection = database.lookupCollection(decodedPath);
+                createError = pathCollection->createOperation(name, ObjectType::FILE);
+                editError = pathCollection->editFileOperation(name, path, content);
+            }
+        }    
+
+        string messageContent;
+
+        if (createError == -1){
+            messageContent = "Collection with name ";
+            messageContent += name;
+            messageContent += " already exists.";
+            return crow::response(400, messageContent);
+        } else if (createError == -2){
+            messageContent = "Collection creation failed.";
+            return crow::response(400, messageContent);
+        } else if (createError == 0 && editError >= 0){
+            messageContent = "Collection with name ";
+            messageContent += name;
+            messageContent += " created successfully.";
+            return crow::response(200, messageContent);
+        } else if (createError == -3){
+            messageContent = "File with name ";
+            messageContent += name;
+            messageContent += " already exists.";
+            return crow::response(400, messageContent);
+        } else if (createError == 1 && editError >= 0){
+            messageContent = "File with name ";
+            messageContent += name;
+            messageContent += " created successfully.";
+            return crow::response(200, messageContent);
+        } else if (createError == -4){
+            messageContent = "Failed to create file with name ";
+            messageContent += name;
+            messageContent += ".";
+            return crow::response(400, messageContent);
+        }
+
+        if (editError == -1){
+            messageContent = "Unable to open file.";
+            return crow::response(400, messageContent);
+        } else if (editError == 0){
+            messageContent = "File content changed successfully.";
+            return crow::response(200, messageContent);
+        } else if (editError == -2){
+            messageContent = "File with name ";
+            messageContent += name;
+            messageContent += " does not exist.";
+            return crow::response(400, messageContent);
+        }
+        
+        return crow::response(400, "Something unexpected happened.");
+    });
+
 
     app.port(8000).multithreaded().run();
     return 0;
@@ -328,4 +442,14 @@ string pathDecoder(string path){
         }
     }
     return path;
+}
+
+void zipDirectory(string name, string directoryPath)
+{
+    int lastSlashIndex = directoryPath.find_last_of("/");
+    if (lastSlashIndex != string::npos) {
+        directoryPath.erase(lastSlashIndex);
+    }
+    string command = "cd " + directoryPath + " && zip -r " + name + ".zip " + name;
+    system(command.c_str());
 }

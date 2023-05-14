@@ -250,7 +250,7 @@ string Collection::readOperation(string name, ObjectType type) {
     for (auto& child : this->getChildren()) {
       if (child->getName() == name) {
         if (type == ObjectType::FILE){
-          found == true;
+          found = true;
           Document* doc = dynamic_cast<Document*>(child);
           if(doc != nullptr){
             str = doc->getContent();
