@@ -12,7 +12,7 @@ const WarningNotification = (theme, err) => toast.warn(err, {
 });
 
 export async function ReadCollection(name,path,type) {
-    const base = 'http://ec2-18-224-39-255.us-east-2.compute.amazonaws.com:8000/read/'
+    const base = 'http://ec2-18-221-246-92.us-east-2.compute.amazonaws.com:8000/read/'
     const url = base + name + '/' + path + '/' + type
     var d = [];
     d = await axios.get(url)
