@@ -4,8 +4,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Database from './pages/Database'
 import Profile from './pages/Profile'
 import Login from './pages/Login'
-import TablePage from './pages/TablePage'
 import Collection from './pages/Collection'
+import Search from './pages/Search'
+import Document from './pages/Document'
 
 function App() {
     return (
@@ -14,9 +15,11 @@ function App() {
                 <Routes>
                     <Route path='/' element={<Database />} />
                     <Route path='/:id' element={<Collection />} />
-                    <Route path='/json' element={<TablePage />} />
+                    <Route path='/:id/json' element={<Document />} />
+                    <Route path='/json' element={<Document />} />
                     <Route path='/profile' element={<Profile />} />
                     <Route path='/login' element={<Login />} />
+                    <Route path='/search' element={<Search />} />
                 </Routes>
             </Layout>
         </BrowserRouter>
