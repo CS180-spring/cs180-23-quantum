@@ -2,7 +2,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
-const SuccessNotification = (theme, name) => toast.success('Document: ' + name +' Created!', {
+const SuccessNotification = (theme, name) => toast.success('Document: ' + name +' Downloaded!', {
     position: "bottom-right",
     autoClose: 5000,
     hideProgressBar: false,
@@ -24,20 +24,22 @@ const WarningNotification = (theme,err) => toast.warn(err, {
     theme: theme,
 });
 
-export function CreateDocument(theme,name,path) {
+export function DownloadDocument(theme,name,path) {
     if ( path === undefined){
         path = 'database'
     }
-    const base = 'http://ec2-18-218-184-170.us-east-2.compute.amazonaws.com:8000/create/'
+    const base = 'http://ec2-18-218-184-170.us-east-2.compute.amazonaws.com:8000/download/'
     const url = base + name +'/' + path + '/file'
-    if (name === ""){
-        WarningNotification(theme,'Please fill out the file name.');
-    } else if (name.includes('.json')){
-        WarningNotification(theme,'Please remove extension from name.');
-    } else {
-        axios.get(url)
-        .catch(error=>WarningNotification(theme,error))
-        .then(res=>{console.log(res)})
-        .then(SuccessNotification(theme, name))
-    }
+    // axios.get(url)
+        // .catch(error=>WarningNotification(theme,error))
+        // .then(res=>{console.log(res)})
+        // .then(SuccessNotification(theme, name))
+    fetch(url)
+        .then(res => res.blob())
+        .then(data => {
+        var a = document.createElement("a");
+        a.href = window.URL.createObjectURL(data);
+        a.download = name;
+        a.click();
+        });
 }

@@ -20,7 +20,7 @@ const Database = () => {
     const {theme} = useContext(ThemeContext)
 
     const fetchData = useCallback( async () => {
-        const url = 'http://ec2-18-221-246-92.us-east-2.compute.amazonaws.com:8000/read/database/database/folder'
+        const url = 'http://ec2-18-218-184-170.us-east-2.compute.amazonaws.com:8000/read/database/database/folder'
         const data = await axios.get(url)
             .then(function (response) {
                 const objects = response.data.toString().split('-');

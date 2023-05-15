@@ -1,9 +1,7 @@
-import React, {useState, useContext, useCallback} from 'react'
+import React, {useState} from 'react'
 import { motion } from 'framer-motion';
 import { AiOutlineSearch,AiOutlineEnter } from 'react-icons/ai';
 import axios from 'axios';
-import { toast } from 'react-toastify';
-import { ThemeContext } from '../components/ThemeContext';
 import Folder from '../components/Folder';
 import Document from '../components/Document';
 
@@ -16,11 +14,10 @@ function checkFolder(doc) {
 }
 
 const Search = () => {
-    var [data, setData] = useState([])
-    const {theme} = useContext(ThemeContext)
+    var [data, setData] = useState(null)
 
-    const fetchData = useCallback( async () => {
-        const u = 'http://ec2-18-221-246-92.us-east-2.compute.amazonaws.com:8000/search/'
+    const fetchData = async() => {
+        const u = 'http://ec2-18-218-184-170.us-east-2.compute.amazonaws.com:8000/search/'
         const name = document.getElementById('searchQ').value 
         const path = '/database'
         const url = u + name + path
@@ -32,33 +29,22 @@ const Search = () => {
                     });
                 return filtered;
             })
-            .catch(function (error) {
-                toast.error(error, {
-                    position: "bottom-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: theme,
-                })
-            });
+            console.log(data)
         setData(data);
-    }, [theme])
+    };
 
     return (
         <div>
             <div className="max-w-lg mx-auto rounded-lg overflow-hidden md:max-w-xl">
                 <div className="md:flex">
                     <div className="w-full p-3">
-                        <form className="relative">
+                        <div className="relative">
                         <i className="absolute text-gray-400 top-5 left-4"> <AiOutlineSearch size={18} /></i>
                        <input className="bg-darkPurple dark:bg-white dark:text-black h-14 w-full px-12 rounded-lg focus:outline-none hover:cursor-pointer" id="searchQ"/>
                         <button>
-                        <motion.i onClick={{fetchData}} whileHover={{scale:1.3}} className="absolute text-gray-400 top-5 right-4"><AiOutlineEnter /></motion.i>
+                        <motion.i onClick={fetchData} whileHover={{scale:1.3}} className="absolute text-gray-400 top-5 right-4"><AiOutlineEnter /></motion.i>
                         </button>
-                        </form>
+                        </div>
                     </div>
                 </div>
                 <div className='mt-5 p-2'>
@@ -66,7 +52,7 @@ const Search = () => {
                 Collections
                 </h2>
                 <div className='grid sm:grid-cols-1 md:grid-cols-2'>
-                    {data && data.filter(checkFolder).length>0 
+                    {data && Array.isArray(data) && data.filter(checkFolder).length>0 
                     ? 
                     data.map((e)=>{
                         return (
@@ -80,7 +66,7 @@ const Search = () => {
                 Documents
                 </h2>
                 <div className='grid sm:grid-cols-1 md:grid-cols-2'>
-                    {data && data.filter(checkDoc).length>0 
+                    {data && Array.isArray(data) && data.filter(checkDoc).length>0 
                     ? 
                     data.map((e)=>{
                         return (

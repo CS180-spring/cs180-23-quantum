@@ -25,7 +25,7 @@ const WarningNotification = (theme,err) => toast.warn(err, {
 });
 
 export async function UpdateFolder(theme,oldName,newName,path) {
-    const base = 'http://ec2-18-221-246-92.us-east-2.compute.amazonaws.com:8000/update/'
+    const base = 'http://ec2-18-218-184-170.us-east-2.compute.amazonaws.com:8000/update/'
     if ( path === undefined){
         path = 'database'
     }
