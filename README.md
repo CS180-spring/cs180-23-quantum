@@ -12,10 +12,14 @@ QuantumDB is a Web-based Document Data Store used to manage and process large vo
 - Yuk Shun Wong (Frontend Engineer, Quality Assurance/Testing Lead)
 
 ## Technologies
-- **Interface**: Web app console
-- **Programming Languages**: C++ and JavaScript
+- **Interface**: Responsive Web Application
+- **Languages/Frameworks**: C++, React(HTML), Tailwind and JavaScript
 - **Frontend**: Reacts.js
-- **Middleware**: Restbed
+- **Middleware**: Crowcpp
+- **Backend**: C++
+- **Testing**: Googletest and Jest
+- **Database/Server**: AWS EC2 t2.Large
+
 
 ## Features (tentative)
 - Feature 1: Creates, reads, updates and deletes documents/collections/databases
