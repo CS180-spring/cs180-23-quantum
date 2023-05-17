@@ -32,7 +32,22 @@ export async function DeleteFolder(theme, name, path) {
     const base = 'http://ec2-18-221-246-92.us-east-2.compute.amazonaws.com:8000/delete/'
     const url = base + name +'/' + path + '/folder'
     axios.get(url)
-    .catch(error=>WarningNotification(theme,error))
+    .catch((error) => { // error is handled in catch block
+        if (error.response) { // status code out of the range of 2xx
+            if (response.status == 400){
+                WarningNotification(theme,"Failed to delete folder: " + name)
+            }
+            if (response.status == 404){
+                WarningNotification(theme,"File already exists")
+            }
+            if (response.status == 403){
+                WarningNotification(theme,"File does not exist")
+            }
+        } 
+        else if (error.request) { // The request was made but no response was received
+            WarningNotification(theme,"No response received")
+        }
+      })
     .then(res=>{console.log(res)})
     .then(SuccessNotification(theme,name))
-}
+};
