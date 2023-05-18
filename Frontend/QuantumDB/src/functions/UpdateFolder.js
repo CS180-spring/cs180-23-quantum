@@ -25,7 +25,7 @@ const WarningNotification = (theme,err) => toast.warn(err, {
 });
 
 export async function UpdateFolder(theme,oldName,newName,path) {
-    const base = 'http://ec2-18-218-184-170.us-east-2.compute.amazonaws.com:8000/update/'
+    const base = 'http://ec2-18-220-175-18.us-east-2.compute.amazonaws.com:8000/update/'
     if ( path === undefined){
         path = 'database'
     }
@@ -39,13 +39,13 @@ export async function UpdateFolder(theme,oldName,newName,path) {
         axios.get(url)
         .catch((error) => { // error is handled in catch block
             if (error.response) { // status code out of the range of 2xx
-                if (response.status == 400){
+                if (error.response.status == 400){
                     WarningNotification(theme,"Failed to update folder: " + oldName)
                 }
-                if (response.status == 404){
+                if (error.response.status == 404){
                     WarningNotification(theme,"Folder already exists")
                 }
-                if (response.status == 403){
+                if (error.response.status == 403){
                     WarningNotification(theme,"Folder does not exist")
                 }
             } 

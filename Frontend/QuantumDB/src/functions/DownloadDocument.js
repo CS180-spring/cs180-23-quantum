@@ -16,7 +16,7 @@ export function DownloadDocument(theme,name,path) {
     if ( path === undefined){
         path = 'database'
     }
-    const base = 'http://ec2-18-218-184-170.us-east-2.compute.amazonaws.com:8000/download/'
+    const base = 'http://ec2-18-220-175-18.us-east-2.compute.amazonaws.com:8000/download/'
     const url = base + name +'/' + path + '/file'
     // axios.get(url)
         // .catch(error=>WarningNotification(theme,error))

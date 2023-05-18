@@ -24,13 +24,32 @@ const WarningNotification = (theme,err) => toast.warn(err, {
     theme: theme,
 });
 
+
+
 export function ImportFile(theme, name, path, type, content) {
+
     if ( path === undefined){
         path = 'database'
     }
-    const base = 'http://ec2-18-218-184-170.us-east-2.compute.amazonaws.com:8000/import/'
-    const url = base + name +'/' + path + '/' + type + '/' + content
-        axios.get(url)
+    const base = 'http://ec2-18-220-175-18.us-east-2.compute.amazonaws.com:8000/import/'
+    const url = base + name +'/' + path + '/' + type
+    axios
+    .post(
+        url,
+        [
+            {
+                body: content,
+            },
+        ],
+        {
+            params: { 'api-version': '3.0' },
+            headers: {
+                'content-type': 'text/plain',
+            },
+        }
+    )
+        .then(function (response) {
+        console.log(response.data);})
         .catch(error=>WarningNotification(theme,error))
         .then(SuccessNotification(theme, name))
 }
