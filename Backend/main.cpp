@@ -228,14 +228,15 @@ int main(){
         return crow::response(400);
     });
 
-    CROW_ROUTE(app, "/editFile/<string>/<string>/<string>")([&database](string name, string path, string newContent){
+    CROW_ROUTE(app, "/editFile/<string>/<string>")
+        .methods("POST"_method)([&database](const crow::request& req, string name, string path){
         int error = -1;
         string decodedPath = pathDecoder(path);
         if(decodedPath == "database"){
-            error = database.editFileOperation(name, path, newContent);
+            error = database.editFileOperation(name, path, req.body);
         } else {
             Collection* pathCollection = database.lookupCollection(decodedPath);
-            error = pathCollection->editFileOperation(name, path, newContent);
+            error = pathCollection->editFileOperation(name, path, req.body);
         }    
 
         string messageContent;
