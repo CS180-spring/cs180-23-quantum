@@ -44,12 +44,10 @@ class FilesystemObject {
 
         // CRUD Operations
         virtual int createOperation(string name, ObjectType type) = 0;
-        //Move to Document? string read_Document(int id);
         virtual int updateOperation(string newName, string oldName, ObjectType type) = 0;
         virtual int deleteOperation(string name, ObjectType type) = 0;
 
         // Other functions
-        //Move to Collection? string displayContents();
         int incrementID();
         void deleteChild(FilesystemObject* &child, vector<FilesystemObject*> &children);
         void renameChildren(FilesystemObject* &child, string newPath, string oldPath);

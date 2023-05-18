@@ -69,7 +69,7 @@ int main(){
             messageContent = "Collection with name ";
             messageContent += name;
             messageContent += " already exists.";
-            return crow::response(400, messageContent);
+            return crow::response(404, messageContent);
         } else if (error == -2){
             messageContent = "Collection creation failed.";
             return crow::response(400, messageContent);
@@ -82,7 +82,7 @@ int main(){
             messageContent = "File with name ";
             messageContent += name;
             messageContent += " already exists.";
-            return crow::response(400, messageContent);
+            return crow::response(404, messageContent);
         } else if (error == 1){
             messageContent = "File with name ";
             messageContent += name;
@@ -122,7 +122,7 @@ int main(){
             messageContent = "Collection with name ";
             messageContent += newName;
             messageContent += " already exists.";
-            return crow::response(400, messageContent);
+            return crow::response(404, messageContent);
         } else if (error == 0){
             messageContent = "Collection renamed to ";
             messageContent += newName;
@@ -132,7 +132,7 @@ int main(){
             messageContent = "Collection with name "; 
             messageContent += oldName; 
             messageContent += " does not exist.";
-            return crow::response(400, messageContent);
+            return crow::response(403, messageContent);
         } else if (error == 1){
             messageContent = "Document renamed to ";
             messageContent += newName;
@@ -142,12 +142,12 @@ int main(){
             messageContent = "Document with name ";
             messageContent += oldName;
             messageContent += " does not exist.";
-            return crow::response(400, messageContent);
+            return crow::response(403, messageContent);
         } else if (error == -7){
             messageContent = "Document with name ";
             messageContent += newName;
             messageContent += " already exists.";
-            return crow::response(400, messageContent);
+            return crow::response(404, messageContent);
         }
         return crow::response(400, "Something unexpected happened.");
     });
@@ -183,7 +183,7 @@ int main(){
             messageContent = "Collection with name ";
             messageContent += name;
             messageContent += " does not exist.";
-            return crow::response(400, messageContent);    
+            return crow::response(403, messageContent);    
         } else if (error == 1){
             messageContent = "File deleted successfully.";
             return crow::response(200, messageContent);
@@ -194,7 +194,7 @@ int main(){
             messageContent = "File with name ";
             messageContent += name;
             messageContent += " does not exist.";
-            return crow::response(400, messageContent);
+            return crow::response(403, messageContent);
         }
         return crow::response(400, "Something unexpected happened.");
     });
@@ -250,7 +250,7 @@ int main(){
             messageContent = "File with name ";
             messageContent += name;
             messageContent += " does not exist.";
-            return crow::response(400, messageContent);
+            return crow::response(403, messageContent);
         }
         return crow::response(400, "Something unexpected happened.");
     });
@@ -291,7 +291,7 @@ int main(){
             //Send the file over
             ifstream file(directoryPath+".zip", ios::binary);
             if (file.good()) {
-                std::ostringstream contents;
+                ostringstream contents;
                 contents << file.rdbuf();
                 crow::response res(contents.str());
                 res.set_header("Content-Disposition", "attachment; filename=\"" + name + ".zip\"");
@@ -303,7 +303,7 @@ int main(){
                 
                 return res;
             } else {
-                return crow::response(404);
+                return crow::response(400);
             }
         } else if (type == "file"){
             directoryPath += ".json";
@@ -316,32 +316,34 @@ int main(){
                 res.set_header("Content-Type", "application/json");
                 return res;
             } else {
-                return crow::response(404);
+                return crow::response(400);
             }
         }
-        return crow::response(404);
+        return crow::response(400);
     });
 
-    CROW_ROUTE(app, "/import/<string>/<string>/<string>/<string>")([&database](string name, string path, string type, string content){
+CROW_ROUTE(app, "/import/<string>/<string>/<string>")
+    .methods("POST"_method)([&database](const crow::request& req, string name, string path, string type) {
         int createError = -99;
-        int editError = -99; 
+        int editError = -99;
         string decodedPath = pathDecoder(path);
-        if(decodedPath == "database"){
-            if(type == "folder"){
-                //To be implemented if time permits
-            } else if (type == "file"){
+        
+        if (decodedPath == "database") {
+            if (type == "folder") {
+                // To be implemented if time permits
+            } else if (type == "file") {
                 createError = database.createOperation(name, ObjectType::FILE);
-                editError = database.editFileOperation(name, path, content);
+                editError = database.editFileOperation(name, path, req.body);
             }
         } else {
-            if(type == "folder"){
-                //To be implemented if time permits
-            } else if (type == "file"){
+            if (type == "folder") {
+                // To be implemented if time permits
+            } else if (type == "file") {
                 Collection* pathCollection = database.lookupCollection(decodedPath);
                 createError = pathCollection->createOperation(name, ObjectType::FILE);
-                editError = pathCollection->editFileOperation(name, path, content);
+                editError = pathCollection->editFileOperation(name, path, req.body);
             }
-        }    
+        }
 
         string messageContent;
 
@@ -349,7 +351,7 @@ int main(){
             messageContent = "Collection with name ";
             messageContent += name;
             messageContent += " already exists.";
-            return crow::response(400, messageContent);
+            return crow::response(404, messageContent);
         } else if (createError == -2){
             messageContent = "Collection creation failed.";
             return crow::response(400, messageContent);
@@ -362,7 +364,7 @@ int main(){
             messageContent = "File with name ";
             messageContent += name;
             messageContent += " already exists.";
-            return crow::response(400, messageContent);
+            return crow::response(404, messageContent);
         } else if (createError == 1 && editError >= 0){
             messageContent = "File with name ";
             messageContent += name;
@@ -385,7 +387,7 @@ int main(){
             messageContent = "File with name ";
             messageContent += name;
             messageContent += " does not exist.";
-            return crow::response(400, messageContent);
+            return crow::response(403, messageContent);
         }
         
         return crow::response(400, "Something unexpected happened.");
@@ -405,7 +407,7 @@ void initializationID(){
     filesystem::path json_path = database_path / "metadata.json";
 
     if (filesystem::exists(json_path)) {
-        std::cout << "Metadata file already exists at " << json_path << ", skipping creation of JSON file." << endl;
+        cout << "Metadata file already exists at " << json_path << ", skipping creation of JSON file." << endl;
         return;
     }    
 
@@ -430,7 +432,7 @@ void initialization(){
         } else {
             cout << "Directory does not exist: " << path << endl;
         }
-    } catch (const std::exception& e) {
+    } catch (const exception& e) {
         cout << "Error removing directory: " << e.what() << endl;
     }
 }
