@@ -12,7 +12,7 @@ const WarningNotification = (theme, err) => toast.warn(err, {
 });
 
 export async function ReadCollection(name,path,type) {
-    const base = 'http://ec2-18-218-184-170.us-east-2.compute.amazonaws.com:8000/read/'
+    const base = 'http://ec2-18-220-175-18.us-east-2.compute.amazonaws.com:8000/read/'
     const url = base + name + '/' + path + '/' + type
     var d = [];
     d = await axios.get(url)
@@ -25,13 +25,13 @@ export async function ReadCollection(name,path,type) {
         })
         .catch((error) => { // error is handled in catch block
             if (error.response) { // status code out of the range of 2xx
-                if (response.status == 400){
+                if (error.response.status == 400){
                     WarningNotification(theme,"Failed to read folder: " + name)
                 }
-                if (response.status == 404){
+                if (error.response.status == 404){
                     WarningNotification(theme,"File already exists")
                 }
-                if (response.status == 403){
+                if (error.response.status == 403){
                     WarningNotification(theme,"File does not exist")
                 }
             } 
