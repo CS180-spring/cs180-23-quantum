@@ -79,7 +79,7 @@ const Database = () => {
             <h3 className='p-2'>No documents saved in the database.</h3>
             }
         </div>
-        <div className='fixed bottom-0 p-2 mb-2'>
+        <div className='fixed bottom-0 mb-5'>
             <Operations refresh={fetchData} />
         </div>
     </>

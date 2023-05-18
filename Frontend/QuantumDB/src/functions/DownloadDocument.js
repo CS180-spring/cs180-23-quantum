@@ -1,19 +1,7 @@
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios';
 
 const SuccessNotification = (theme, name) => toast.success('Document: ' + name +' Downloaded!', {
-    position: "bottom-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: theme,
-});
-
-const WarningNotification = (theme,err) => toast.warn(err, {
     position: "bottom-right",
     autoClose: 5000,
     hideProgressBar: false,
@@ -41,5 +29,6 @@ export function DownloadDocument(theme,name,path) {
         a.href = window.URL.createObjectURL(data);
         a.download = name;
         a.click();
+        SuccessNotification(theme, name)
         });
 }
