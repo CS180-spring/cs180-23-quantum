@@ -28,7 +28,7 @@ export function CreateFolder(theme, name, path) {
     if ( path === undefined){
         path = 'database'
     }
-    const base = 'http://ec2-18-221-246-92.us-east-2.compute.amazonaws.com:8000/create/'
+    const base = 'http://ec2-18-218-184-170.us-east-2.compute.amazonaws.com:8000/create/'
     const url = base + name +'/' + path + '/folder'
     if (name === ""){
         WarningNotification(theme,'Please fill out the file name.');

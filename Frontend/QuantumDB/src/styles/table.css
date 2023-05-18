@@ -1,0 +1,51 @@
+.json-to-table td,
+.json-to-table th {
+  padding: 12px 15px !important;
+  border: 0px !important;
+}
+
+.json-to-table td {
+  text-align: left !important; 
+}
+
+.json-to-table tr {
+    background-color: #4b3375 !important;
+    text-align: left !important;
+    border-bottom: 1px solid #dddddd !important;
+}
+
+.json-to-table tr:nth-child(even) {
+    background-color: #f3f3f3 !important;
+    color: black;
+}
+
+.json-to-table tr:last-child {
+    border-bottom: 2px solid #4b3375 !important;
+}
+
+.json-to-table th[scope="col"] {
+  background-color: #696969 !important;
+  color: #fff !important; 
+}
+
+.json-to-table th[scope="row"] {
+  background-color: #d7d9f2 !important; 
+}
+
+.json-to-table caption {
+  caption-side: none !important; 
+}
+
+.json-to-table table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  font-family: sans-serif !important;
+  color: white !important;
+  margin: 10px 0 !important;
+  font-size: 0.9em !important;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+.json-to-table table:first-child {
+    border-radius: 25px !important;
+}

@@ -16,7 +16,8 @@ function App() {
                     <Route path='/' element={<Database />} />
                     <Route path='/:id' element={<Collection />} />
                     <Route path='/:id/json' element={<Document />} />
-                    <Route path='/json' element={<Document />} />
+                    <Route path='/:id/:id/json' element={<Document />} />
+                    <Route path='/:id/:id/:id/json' element={<Document />} />
                     <Route path='/profile' element={<Profile />} />
                     <Route path='/login' element={<Login />} />
                     <Route path='/search' element={<Search />} />

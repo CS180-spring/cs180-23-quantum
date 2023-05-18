@@ -2,7 +2,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
-const SuccessNotification = (theme, name) => toast.success('Document: ' + name +' Created!', {
+const SuccessNotification = (theme, name) => toast.success('File: ' + name + ' Saved!', {
     position: "bottom-right",
     autoClose: 5000,
     hideProgressBar: false,
@@ -24,20 +24,13 @@ const WarningNotification = (theme,err) => toast.warn(err, {
     theme: theme,
 });
 
-export function CreateDocument(theme,name,path) {
+export function ImportFile(theme, name, path, type, content) {
     if ( path === undefined){
         path = 'database'
     }
-    const base = 'http://ec2-18-218-184-170.us-east-2.compute.amazonaws.com:8000/create/'
-    const url = base + name +'/' + path + '/file'
-    if (name === ""){
-        WarningNotification(theme,'Please fill out the file name.');
-    } else if (name.includes('.json')){
-        WarningNotification(theme,'Please remove extension from name.');
-    } else {
+    const base = 'http://ec2-18-218-184-170.us-east-2.compute.amazonaws.com:8000/import/'
+    const url = base + name +'/' + path + '/' + type + '/' + content
         axios.get(url)
         .catch(error=>WarningNotification(theme,error))
-        .then(res=>{console.log(res)})
         .then(SuccessNotification(theme, name))
-    }
 }
