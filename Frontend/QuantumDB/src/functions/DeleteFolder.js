@@ -29,7 +29,7 @@ export async function DeleteFolder(theme, name, path) {
     if ( path === undefined){
         path = 'database'
     }
-    const base = 'http://ec2-3-18-109-0.us-east-2.compute.amazonaws.com:8000/delete/'
+    const base = 'http://ec2-13-58-177-173.us-east-2.compute.amazonaws.com:8000/delete/'
     const url = base + name +'/' + path + '/folder'
     axios.get(url)
     .catch((error) => { // error is handled in catch block

@@ -1,13 +1,15 @@
-import React, {useContext, useRef, useState, useEffect, useCallback} from 'react'
+import React, {useContext, useEffect, useCallback} from 'react'
 import { JsonToTable } from "react-json-to-table";
 import 'draft-js/dist/Draft.css';
 import { ThemeContext } from '../components/ThemeContext';
 import { toast } from 'react-toastify';
 import { motion } from 'framer-motion';
 import { AiOutlineEdit, AiOutlineSave, AiOutlineTable, AiOutlineSearch, AiOutlineReload, AiOutlineNumber } from 'react-icons/ai';
-import { IoMdAdd, IoMdClose } from "react-icons/io"
+import { IoMdClose } from "react-icons/io"
+import { VscJson } from "react-icons/vsc";
 import axios from 'axios';
 import { useParams } from "react-router";
+import Editor from '@monaco-editor/react';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/table.css'
 
@@ -93,7 +95,7 @@ const Document = () => {
     const [operator, setOperator] = React.useState(3);
 
     const fetchData = useCallback( async () => {
-        const u = 'http://ec2-3-18-109-0.us-east-2.compute.amazonaws.com:8000/read/'
+        const u = 'http://ec2-13-58-177-173.us-east-2.compute.amazonaws.com:8000/read/'
         const d = String(id.split('/'))
         const name = d
         console.log("name: " + d)
@@ -125,7 +127,7 @@ const Document = () => {
     }, [theme])
 
     const editfile = useCallback( async (json) => {
-        const base = 'http://ec2-3-18-109-0.us-east-2.compute.amazonaws.com:8000/editFile/'
+        const base = 'http://ec2-13-58-177-173.us-east-2.compute.amazonaws.com:8000/editFile/'
         const d = String(id.split('/'))
         const name = d
         console.log("name: " + d)
@@ -161,6 +163,14 @@ const Document = () => {
         fetchData()
       }, []);
 
+
+    function printTheJSONInPrettyFormat() {
+        var badJSON = document.getElementById('texta').value;
+        var parseJSON = JSON.parse(badJSON);
+        var JSONInPrettyFormat = JSON.stringify(parseJSON, undefined, 4);
+        document.getElementById('texta').value =
+        JSONInPrettyFormat;
+     }
     function save(str){
         if (isJsonString(str) === true){
             editfile(document.getElementById('texta').value)
@@ -188,15 +198,17 @@ const Document = () => {
                 <div className='grid'>
                     <div className='flex justify-between mb-1 items-center'>
                         <h2 className='text-xl font-bold text-stone-700 dark:text-white ml-2'>Editor</h2>
-                        <div className='flex space-x-2 items-center'>                       
+                        <div className='flex space-x-2 items-center'>     
+                        <motion.button type="button" onClick={() => printTheJSONInPrettyFormat()} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><VscJson/></motion.button>                  
                         <motion.button type="button" onClick={() => save(document.getElementById('texta').value)} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><AiOutlineSave/></motion.button>
                         </div>
                     </div>
                 </div>
                 <div className='mt-5'>
                     <div className='lg:flex lg:space-y-0 lg:space-x-5 lg:justify-center'>
-                    <div className='grid w-full'>
-                        <textarea id='texta' value={editorinfo} onChange={(e) => setEditorinfo(e.target.value)} className='w-full border-2 border-darkPurple rounded bg-transparent p-5 h-144 md:h-160 text-stone-900 dark:text-white'></textarea>
+                        <div className='grid w-full'>
+                            <textarea id='texta' spellcheck='false' value={editorinfo} onChange={(e) => setEditorinfo(e.target.value)} className='w-full border-2 border-darkPurple rounded bg-darkPurple/30 dark:bg-darkPurple/50  p-5 h-144 md:h-160 text-stone-900 dark:text-white'></textarea>
+                            {/* <Editor id='texta' className='h-144 md:h-160' language="json" value={editorinfo} onChange={(e) => setEditorinfo(e.target.value)} options={{ formatOnType: true, tabCompletion: true, autoIndent: true, automaticLayout: true }} /> */}
                         </div>
                     </div>
                 </div>
