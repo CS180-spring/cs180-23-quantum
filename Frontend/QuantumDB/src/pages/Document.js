@@ -1,4 +1,4 @@
-import React, {useContext, useRef, useState, useEffect} from 'react'
+import React, {useContext, useRef, useState, useEffect, useCallback} from 'react'
 import { JsonToTable } from "react-json-to-table";
 import 'draft-js/dist/Draft.css';
 import { ThemeContext } from '../components/ThemeContext';
@@ -6,6 +6,8 @@ import { toast } from 'react-toastify';
 import { motion } from 'framer-motion';
 import { AiOutlineEdit, AiOutlineSave, AiOutlineTable, AiOutlineSearch, AiOutlineReload, AiOutlineNumber } from 'react-icons/ai';
 import { IoMdAdd, IoMdClose } from "react-icons/io"
+import axios from 'axios';
+import { useParams } from "react-router";
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/table.css'
 
@@ -31,18 +33,6 @@ const WarningNotification = (theme,err) => toast.warn(err, {
     progress: undefined,
     theme: theme,
 });
-  
-const myJson = {
-    "Student": [{ name: "Jack", email: "jack@xyz.com" }],
-    "Sponsors": [
-      { name: "john", email: "john@xyz.com", age: 18, gender: "M" },
-      { name: "Jack", email: "jack@xyz.com", age: 23, gender: "M" },
-      { name: "Jill", email: "jill@xyz.com", age: 8, gender: "F" },
-      { name: "Zoe", email: "zoe@xyz.com", age: 49, gender: "F" },
-      { name: "Zoe", email: "z@xyz.com", age: 38, gender: "F" },
-      { name: "Jack", email: "JACK@xyz.com", age: 12, gender: "M" }
-    ]
-};
 
 function isJsonString(str) {
     try {
@@ -55,14 +45,13 @@ function isJsonString(str) {
 
  function searchJson(obj, predicate) {
     let result = []; 
-    for(let p in obj) { // iterate on every property
-        // tip: here is a good idea to check for hasOwnProperty
-        if (typeof(obj[p]) == 'object') { // if its object - lets search inside it
+    for(let p in obj) {
+        if (typeof(obj[p]) == 'object') {
             result = result.concat(searchJson(obj[p], predicate));
         } else if (predicate(p, obj[p])) 
             result.push(
                obj
-            ); // check condition
+        );
     }
     return result;
 }
@@ -91,32 +80,90 @@ function sortJsonArrayByProperty(objArray, prop, direction){
 // sortJsonArrayByProperty(results, 'attributes.OBJECTID', -1);
 
 const Document = () => {
+    let { id } = useParams();
     const ref = React.useRef(null);
     const [edit, setEdit] = React.useState(false)
     const {theme} = useContext(ThemeContext)
-    const [fileinfo, setFileinfo] = React.useState(JSON.stringify(myJson, null, "\t"))
-    const [editorinfo, setEditorinfo] = React.useState(JSON.stringify(myJson, null, "\t"))
-    const [viewerinfo, setViewerinfo] = React.useState(JSON.stringify(myJson, null, "\t"))
-
-    const [isOverflowing, setIsOverflowing] = React.useState(false);
+    const [fileinfo, setFileinfo] = React.useState('')
+    const [editorinfo, setEditorinfo] = React.useState('')
+    const [viewerinfo, setViewerinfo] = React.useState('')
     const [stringState, setStringState] = React.useState(false);
     const [intState, SetIntState] = React.useState(false);
     const [searching, setSearching] = React.useState(false);
     const [operator, setOperator] = React.useState(3);
 
-    React.useEffect(() => {
-        const el = ref.current;
-        if(el.offsetHeight < el.scrollHeight){
-            setIsOverflowing(true);
+    const fetchData = useCallback( async () => {
+        const u = 'http://ec2-3-18-109-0.us-east-2.compute.amazonaws.com:8000/read/'
+        const d = String(id.split('/'))
+        const name = d
+        console.log("name: " + d)
+        const p = window.location.pathname.split('/')
+        var path = ''
+        if ( String(p[1]) === name ){
+            path = "database"
         } else {
-            setIsOverflowing(false);
+            path = p[1].replaceAll("/","-")
         }
+        const namep = name + '/'
+        console.log("path: " + path)
+        const type = "/file"
+        const url = u + namep + path + type
+        await axios.get(url)
+            .then(res => {if (res.data[0].body !== '') {const r = JSON.stringify(res.data[0].body, null, "\t").replace('"{', '{').replace('}"', '}').replaceAll('\\"','"').replaceAll('\\n','').replace('"[', '[').replace(']"', ']'); setEditorinfo(r);setFileinfo(r);setViewerinfo(r);console.log("fileinfo: " + fileinfo)}})
+            .catch(function (error) {
+                toast.error(error, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: theme,
+                })
+            });
+    }, [theme])
+
+    const editfile = useCallback( async (json) => {
+        const base = 'http://ec2-3-18-109-0.us-east-2.compute.amazonaws.com:8000/editFile/'
+        const d = String(id.split('/'))
+        const name = d
+        console.log("name: " + d)
+        const p = window.location.pathname.split('/')
+        var path = ''
+        if ( String(p[1]) === name ){
+            path = "database"
+        } else {
+            path = p[1].replaceAll("/","-")
+        }
+        console.log("path: " + path)
+        const url = base + name +'/' + path
+        axios.post(
+            url,
+            [
+                {
+                    body: json,
+                },
+            ],
+            {
+                headers: {
+                    'content-type': 'text/plain',
+                },
+            }
+        )
+            .then(function (response) {
+            console.log(response.data);})
+            .catch(error=>WarningNotification(theme,error))
+            .then(SuccessNotification(theme, name))
+    }, [theme])
+
+    useEffect(() => {
+        fetchData()
       }, []);
 
     function save(str){
         if (isJsonString(str) === true){
-            setViewerinfo(document.getElementById('texta').value)
-            SuccessNotification(theme);
+            editfile(document.getElementById('texta').value)
         } else {
             WarningNotification(theme, "Invalid JSON Format!");
         }
@@ -172,7 +219,7 @@ const Document = () => {
                                 <h3>Count: {JSON.parse(viewerinfo).length}</h3>
                                 <input placeholder='Key' id='Key' className='bg-darkPurple w-32 rounded p-2 text-white'></input>
                                 <input placeholder='Value' id='Value' className='bg-darkPurple w-32 rounded p-2 text-white'></input>
-                                <motion.button type="button" onClick={() => setViewerinfo(JSON.stringify(searchJson(myJson, function(key, value) { return key === document.getElementById('Key').value && value === document.getElementById('Value').value;}), null, "\t"))} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><AiOutlineSearch/></motion.button>
+                                <motion.button type="button" onClick={() => setViewerinfo(JSON.stringify(searchJson(JSON.parse(viewerinfo), function(key, value) { return key === document.getElementById('Key').value && value === document.getElementById('Value').value;}), null, "\t"))} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><AiOutlineSearch/></motion.button>
                                 <motion.button type="button" onClick={() => {setSearching(false); setStringState(false); SetIntState(false);}} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><IoMdClose/></motion.button>
                                 </>
                                 :
@@ -191,38 +238,38 @@ const Document = () => {
                                     <h3>Count: {JSON.parse(viewerinfo).length}</h3>
                                     <input placeholder='Key' id='KeyI' className='bg-darkPurple w-32 rounded p-2 text-white'></input>
                                     {
-                                        operator == 1 ? 
+                                        operator === 1 ? 
                                         <motion.button type="button" onClick={() => {setOperator(1);}} whileHover={{scale:1.1}} className='bg-medBlue rounded p-2 text-white'>{'>'}</motion.button>
                                         :
                                         <motion.button type="button" onClick={() => {setOperator(1);}} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-2 text-white'>{'>'}</motion.button>
                                     }
                                     {
-                                        operator == 2 ? 
+                                        operator === 2 ? 
                                         <motion.button type="button" onClick={() => {setOperator(2);}} whileHover={{scale:1.1}} className='bg-medBlue rounded p-2 text-white'>{'>='}</motion.button>
                                         :
                                         <motion.button type="button" onClick={() => {setOperator(2);}} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-2 text-white'>{'>='}</motion.button>
                                     }
                                     {
-                                        operator == 3 ?
+                                        operator === 3 ?
                                         <motion.button type="button" onClick={() => {setOperator(3);}} whileHover={{scale:1.1}} className='bg-medBlue rounded p-2 text-white'>{'=='}</motion.button> 
                                         :
                                         <motion.button type="button" onClick={() => {setOperator(3);}} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-2 text-white'>{'=='}</motion.button>
                                     }
                                     {
-                                        operator == 4 ? 
+                                        operator === 4 ? 
                                         <motion.button type="button" onClick={() => {setOperator(4);}} whileHover={{scale:1.1}} className='bg-medBlue rounded p-2 text-white'>{'<='}</motion.button>
                                         :
                                         <motion.button type="button" onClick={() => {setOperator(4);}} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-2 text-white'>{'<='}</motion.button>
                                     }
                                     {
-                                        operator == 5 ? 
+                                        operator === 5 ? 
                                         <motion.button type="button" onClick={() => {setOperator(5);}} whileHover={{scale:1.1}} className='bg-medBlue rounded p-2 text-white'>{'<'}</motion.button>
                                         :
                                         <motion.button type="button" onClick={() => {setOperator(5);}} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-2 text-white'>{'<'}</motion.button>
                                     }                                    
                                     <input placeholder='Value' id='ValueI' className='bg-darkPurple w-32 rounded p-2 text-white'></input>
                                     <motion.button type="button" 
-                                    onClick={() => setViewerinfo(JSON.stringify(searchJson(myJson, function(key, value) { return operatorChange(key, value);}), null, "\t"))} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><AiOutlineSearch/></motion.button>
+                                    onClick={() => setViewerinfo(JSON.stringify(searchJson(JSON.parse(viewerinfo), function(key, value) { return operatorChange(key, value);}), null, "\t"))} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><AiOutlineSearch/></motion.button>
                                     <motion.button type="button" onClick={() => {setSearching(false); setStringState(false); SetIntState(false);}} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><IoMdClose/></motion.button>
                                     </>
                                     :
@@ -250,12 +297,15 @@ const Document = () => {
                             <div className='w-full'>
                                 <JsonToTable json={JSON.parse(viewerinfo)} />
                                 <div className='flex items-center justify-center'>
-                                {/* {isOverflowing ? <motion.button className='text-stone-700 dark:text-stone-500'>Back to Top</motion.button> : null } */}
                                 </div>
                             </div>
                             :
                             <div className='w-full'>
-                            <div>Invalid JSON Format</div>
+                            {   fileinfo === '' ?
+                            <div className='p-3'>Current Document Empty</div>
+                            :
+                            <div className='p-3'>Invalid JSON Format</div>
+                            }
                             </div>
                         }
                 </div>

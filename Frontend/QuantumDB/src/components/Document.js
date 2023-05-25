@@ -21,10 +21,18 @@ const Document = (props) => {
     <> 
     {editState === false ?
       <motion.div whileHover={{scale:1.05}} className='flex justify-between border-2 p-3 rounded-md m-2 items-center border-darkPurple dark:border-white truncate shadow-white shadow-sm'>
-            <a className='flex items-center' href={'/json'}>
-            <h4 className='font-bold text-darkPurple dark:text-white mt-1 mb-1'>JSON</h4>
-            <h3 className='ml-5 text-stone-700 dark:text-white truncate'> {props.name.replace("database/",'')}</h3>
-            </a>
+            {
+              id === undefined ?
+              <a className='flex items-center' href={ '/' + props.name.replace('.json','') + '/json'}>
+              <h4 className='font-bold text-darkPurple dark:text-white mt-1 mb-1'>JSON</h4>
+                  <h3 className='ml-5 text-stone-700 dark:text-white truncate'> {props.name.replace("database/",'')}</h3>
+                  </a>
+              :
+              <a className='flex items-center' href={ '/' + id + '/' + props.name.replace('.json','') + '/json'}>
+              <h4 className='font-bold text-darkPurple dark:text-white mt-1 mb-1'>JSON</h4>
+                  <h3 className='ml-5 text-stone-700 dark:text-white truncate'> {props.name.replace("database/",'')}</h3>
+                  </a>
+            }
             <div className="flex space-x-1">
             <button onClick={(e) => DownloadDocument(theme, props.name.split(".")[0], id)}  className='bg-darkPurple rounded p-2 text-white w-8 flex justify-center items-center'><AiOutlineDownload /></button>
             <button onClick={(e) => setEditState(true)} className='bg-darkPurple rounded p-2 text-white w-8 flex justify-center items-center'><AiOutlineEdit/></button>
