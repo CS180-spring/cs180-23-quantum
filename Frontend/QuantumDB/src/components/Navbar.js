@@ -6,9 +6,9 @@ const Navbar = () => {
 
   React.useEffect(() => {
     if (window.location.pathname === '/'){
-      setTitle('/database')
+      setTitle('/')
     } else {
-      setTitle(window.location.pathname.replace('-',''))
+      setTitle(window.location.pathname.replace('-','/').replace('/json','.json'))
     }
   }, [])
       

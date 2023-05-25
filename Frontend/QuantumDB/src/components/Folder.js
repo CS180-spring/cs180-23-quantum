@@ -17,7 +17,20 @@ const Folder = (props) => {
     <> 
     {editState === false ?
         <motion.div whileHover={{scale:1.05}} className='flex justify-between border-2 p-3 rounded-md m-2 items-center border-darkPurple dark:border-white shadow-white shadow-sm'>
-            <a className='flex items-center' href={window.location.pathname + '-' + props.name} >
+        {
+            id === undefined ?
+            <a className='flex items-center' href={window.location.pathname.replace('search','') + props.name.replace("database/",'').replace('/','-')} >
+            <>
+            { theme === 'dark' ? 
+                <svg fill="white" className="w-7 h-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M0 4c0-1.1.9-2 2-2h7l2 2h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4z"></path></svg>
+                :
+                <svg fill="	#4b3375" className="w-7 h-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M0 4c0-1.1.9-2 2-2h7l2 2h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4z"></path></svg>
+                }
+            </>
+            <h3 className='ml-5 text-stone-700 dark:text-white'> {props.name.replace("database/",'').replace('/','-')}</h3>
+            </a>
+            :
+            <a className='flex items-center' href={window.location.pathname.replace('search','')  + '-' + props.name.replace("database/",'').replace('/','-')} >
             <>
             { theme === 'dark' ? 
                 <svg fill="white" className="w-7 h-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M0 4c0-1.1.9-2 2-2h7l2 2h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4z"></path></svg>
@@ -27,6 +40,7 @@ const Folder = (props) => {
             </>
             <h3 className='ml-5 text-stone-700 dark:text-white'> {props.name.replace("database/",'')}</h3>
             </a>
+        }
             <div className='flex space-x-1'>
             <button className='bg-darkPurple rounded p-2 text-white w-8 flex justify-center items-center'><AiOutlineDownload/></button>
             <button onClick={(e) => setEditState(true)} className='bg-darkPurple rounded p-2 text-white w-8 flex justify-center items-center'><AiOutlineEdit/></button>

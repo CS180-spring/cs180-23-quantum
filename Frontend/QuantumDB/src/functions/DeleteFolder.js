@@ -2,7 +2,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
-const SuccessNotification = (theme, name) => toast.success('File: ' + name + ' Deleted!', {
+const SuccessNotification = (theme, name) => toast.success('Folder: ' + name + ' Deleted!', {
     position: "bottom-right",
     autoClose: 5000,
     hideProgressBar: false,
@@ -29,7 +29,7 @@ export async function DeleteFolder(theme, name, path) {
     if ( path === undefined){
         path = 'database'
     }
-    const base = 'http://ec2-18-220-175-18.us-east-2.compute.amazonaws.com:8000/delete/'
+    const base = 'http://ec2-3-18-109-0.us-east-2.compute.amazonaws.com:8000/delete/'
     const url = base + name +'/' + path + '/folder'
     axios.get(url)
     .catch((error) => { // error is handled in catch block
