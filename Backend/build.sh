@@ -1,0 +1,1 @@
+g++ -std=c++17 filesystemobject.cpp collection.cpp document.cpp query.cpp main.cpp -lpthread
