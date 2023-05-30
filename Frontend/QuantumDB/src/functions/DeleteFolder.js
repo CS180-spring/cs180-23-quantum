@@ -1,28 +1,8 @@
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
-
-const SuccessNotification = (theme, name) => toast.success('Folder: ' + name + ' Deleted!', {
-    position: "bottom-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: theme,
-});
-
-const WarningNotification = (theme, err) => toast.warn(err, {
-    position: "bottom-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: theme,
-});
+import { WarningNotification } from './WarningNotification';
+import { SuccessNotification } from './SuccessNotification';
 
 
 export async function DeleteFolder(theme, name, path) {
@@ -49,5 +29,5 @@ export async function DeleteFolder(theme, name, path) {
         }
       })
     .then(res=>{console.log(res)})
-    .then(SuccessNotification(theme,name))
+    .then(SuccessNotification(theme,'Folder: ' + name + ' Deleted!'))
 };

@@ -1,28 +1,8 @@
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
-
-const SuccessNotification = (theme, name) => toast.success('Folder: ' + name + ' Created!', {
-    position: "bottom-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: theme,
-});
-
-const WarningNotification = (theme,err) => toast.warn(err, {
-    position: "bottom-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: theme,
-});
+import { WarningNotification } from './WarningNotification';
+import { SuccessNotification } from './SuccessNotification';
 
 export function CreateFolder(theme, name, path) {
     if ( path === undefined){
@@ -54,6 +34,6 @@ export function CreateFolder(theme, name, path) {
               console.log('Error', error.message);
             }
           })
-        .then(SuccessNotification(theme, name))
+        .then(SuccessNotification(theme, 'Folder: ' + name + ' Created!'))
     }
 }

@@ -1,38 +1,17 @@
-import React, {useContext, useRef, useState, useEffect, useCallback} from 'react'
+import React, {useContext, useEffect, useCallback} from 'react'
 import { JsonToTable } from "react-json-to-table";
 import 'draft-js/dist/Draft.css';
 import { ThemeContext } from '../components/ThemeContext';
 import { toast } from 'react-toastify';
 import { motion } from 'framer-motion';
 import { AiOutlineEdit, AiOutlineSave, AiOutlineTable, AiOutlineSearch, AiOutlineReload, AiOutlineNumber } from 'react-icons/ai';
-import { IoMdAdd, IoMdClose } from "react-icons/io"
+import { IoMdClose } from "react-icons/io"
 import axios from 'axios';
 import { useParams } from "react-router";
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/table.css'
-
-
-const SuccessNotification = (theme) => toast.success('Saved', {
-    position: "bottom-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: theme,
-});
-
-const WarningNotification = (theme,err) => toast.warn(err, {
-    position: "bottom-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: theme,
-});
+import { WarningNotification } from '../functions/WarningNotification';
+import { SuccessNotification } from '../functions/SuccessNotification';
 
 function isJsonString(str) {
     try {
@@ -56,26 +35,26 @@ function isJsonString(str) {
     return result;
 }
 
-function sortJsonArrayByProperty(objArray, prop, direction){
-    if (arguments.length<2) throw new Error("sortJsonArrayByProp requires 2 arguments");
-    var direct = arguments.length>2 ? arguments[2] : 1; //Default to ascending
+// function sortJsonArrayByProperty(objArray, prop, direction){
+//     if (arguments.length<2) throw new Error("sortJsonArrayByProp requires 2 arguments");
+//     var direct = arguments.length>2 ? arguments[2] : 1; //Default to ascending
 
-    if (objArray && objArray.constructor===Array){
-        var propPath = (prop.constructor===Array) ? prop : prop.split(".");
-        objArray.sort(function(a,b){
-            for (var p in propPath){
-                if (a[propPath[p]] && b[propPath[p]]){
-                    a = a[propPath[p]];
-                    b = b[propPath[p]];
-                }
-            }
-            // convert numeric strings to integers
-            a = a.match(/^\d+$/) ? +a : a;
-            b = b.match(/^\d+$/) ? +b : b;
-            return ( (a < b) ? -1*direct : ((a > b) ? 1*direct : 0) );
-        });
-    }
-}
+//     if (objArray && objArray.constructor===Array){
+//         var propPath = (prop.constructor===Array) ? prop : prop.split(".");
+//         objArray.sort(function(a,b){
+//             for (var p in propPath){
+//                 if (a[propPath[p]] && b[propPath[p]]){
+//                     a = a[propPath[p]];
+//                     b = b[propPath[p]];
+//                 }
+//             }
+//             // convert numeric strings to integers
+//             a = a.match(/^\d+$/) ? +a : a;
+//             b = b.match(/^\d+$/) ? +b : b;
+//             return ( (a < b) ? -1*direct : ((a > b) ? 1*direct : 0) );
+//         });
+//     }
+// }
 // sortJsonArrayByProperty(results, 'attributes.OBJECTID');
 // sortJsonArrayByProperty(results, 'attributes.OBJECTID', -1);
 
@@ -122,7 +101,7 @@ const Document = () => {
                     theme: theme,
                 })
             });
-    }, [theme])
+    }, [theme, fileinfo, id])
 
     const editfile = useCallback( async (json) => {
         const base = 'http://ec2-3-18-109-0.us-east-2.compute.amazonaws.com:8000/editFile/'
@@ -154,12 +133,12 @@ const Document = () => {
             .then(function (response) {
             console.log(response.data);})
             .catch(error=>WarningNotification(theme,error))
-            .then(SuccessNotification(theme, name))
-    }, [theme])
+            .then(SuccessNotification(theme, name + "saved!"))
+    }, [theme, id])
 
     useEffect(() => {
         fetchData()
-      }, []);
+      }, [fetchData]);
 
     function save(str){
         if (isJsonString(str) === true){
@@ -174,7 +153,7 @@ const Document = () => {
         } else if (operator === 2) {
             return key === document.getElementById('KeyI').value && value >= document.getElementById('ValueI').value;
         } else if (operator === 3) {
-            return key === document.getElementById('KeyI').value && value == document.getElementById('ValueI').value;
+            return key === document.getElementById('KeyI').value && value === document.getElementById('ValueI').value;
         } else if (operator === 4) {
             return key === document.getElementById('KeyI').value && value <= document.getElementById('ValueI').value;
         } else if (operator === 5) {

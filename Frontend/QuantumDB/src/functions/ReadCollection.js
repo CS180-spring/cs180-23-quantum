@@ -1,15 +1,6 @@
 import axios from 'axios';
-
-const WarningNotification = (theme, err) => toast.warn(err, {
-    position: "bottom-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: theme,
-});
+import { WarningNotification } from './WarningNotification';
+import { SuccessNotification } from './SuccessNotification';
 
 export async function ReadCollection(name,path,type) {
     const base = 'http://ec2-3-18-109-0.us-east-2.compute.amazonaws.com:8000/read/'
