@@ -50,7 +50,7 @@ const Database = () => {
       }, [])
           
     return (
-    <>
+    <div>
         <h2 className='text-xl p-2 text-stone-700 font-medium dark:text-white'>
         Collections
         </h2>
@@ -82,7 +82,7 @@ const Database = () => {
         <div className='fixed bottom-0 mb-5'>
             <Operations refresh={fetchData} />
         </div>
-    </>
+    </div>
       );
 }
 

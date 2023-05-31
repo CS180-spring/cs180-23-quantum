@@ -1,6 +1,4 @@
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { WarningNotification } from './WarningNotification';
+// import { WarningNotification } from './WarningNotification';
 import { SuccessNotification } from './SuccessNotification';
 
 export function DownloadDocument(theme,name,path) {

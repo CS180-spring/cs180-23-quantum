@@ -1,6 +1,4 @@
 import axios from 'axios';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { WarningNotification } from './WarningNotification';
 import { SuccessNotification } from './SuccessNotification';
 
@@ -19,13 +17,13 @@ export async function UpdateDocument(theme,oldName,newName,path) {
         axios.get(url)
         .catch((error) => { // error is handled in catch block
             if (error.response) { // status code out of the range of 2xx
-                if (error.response.status == 400){
+                if (error.response.status === 400){
                     WarningNotification(theme,"Failed to update file")
                 }
-                if (error.response.status == 404){
+                if (error.response.status === 404){
                     WarningNotification(theme,"File already exists")
                 }
-                if (error.response.status == 403){
+                if (error.response.status === 403){
                     WarningNotification(theme,"File does not exist")
                 }
             } 

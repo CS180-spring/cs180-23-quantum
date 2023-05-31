@@ -1,12 +1,12 @@
 import Layout from './components/Layout'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-
 import Database from './pages/Database'
 import Profile from './pages/Profile'
 import Login from './pages/Login'
 import Collection from './pages/Collection'
 import Search from './pages/Search'
 import Document from './pages/Document'
+import './index.css'
 
 function App() {
     return (

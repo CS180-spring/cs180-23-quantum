@@ -1,16 +1,18 @@
-import React from 'react'
+import React, {useEffect} from 'react'
+import { useLocation } from 'react-router-dom'
 import Toggle from './ThemeToggle'
 
 const Navbar = () => {
   const [title, setTitle] = React.useState('')
+  const location = useLocation();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (window.location.pathname === '/'){
       setTitle('/')
     } else {
       setTitle(window.location.pathname.replace('-','/').replace('/json','.json'))
     }
-  }, [])
+  }, [location.pathname])
       
   return (
     <nav className='bg-offWhite border-gray-200 mx-2 px-2 py-3 rounded dark:bg-gray-800'>

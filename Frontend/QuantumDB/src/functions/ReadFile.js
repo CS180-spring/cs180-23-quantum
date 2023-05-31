@@ -9,13 +9,13 @@ export async function ReadFile(name,path,type) {
     axios.get(url)
     .catch((error) => { // error is handled in catch block
         if (error.response) { // status code out of the range of 2xx
-            if (error.response.status == 400){
+            if (error.response.status === 400){
                 WarningNotification(theme,"Failed to read file: " + name)
             }
-            if (error.response.status == 404){
+            if (error.response.status === 404){
                 WarningNotification(theme,"File already exists in this directory")
             }
-            if (error.response.status == 403){
+            if (error.response.status === 403){
                 WarningNotification(theme,"File does not exist")
             }
         } 

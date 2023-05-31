@@ -35,7 +35,7 @@ const Search = () => {
 
     return (
         <div>
-            <div className="max-w-lg mx-auto rounded-lg overflow-hidden md:max-w-xl">
+            <div className="max-w-lg mx-auto rounded-lg overflow-hidden">
                 <div className="md:flex">
                     <div className="w-full p-3">
                         <div className="relative">

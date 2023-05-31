@@ -1,5 +1,3 @@
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { WarningNotification } from './WarningNotification';
 import { SuccessNotification } from './SuccessNotification';
