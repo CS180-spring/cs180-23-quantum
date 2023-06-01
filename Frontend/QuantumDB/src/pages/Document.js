@@ -74,7 +74,7 @@ const Document = () => {
     const [operator, setOperator] = React.useState(3);
 
     const fetchData = useCallback( async () => {
-        const u = 'http://ec2-18-220-45-239.us-east-2.compute.amazonaws.com:8000/read/'
+        const u = 'http://ec2-3-144-132-172.us-east-2.compute.amazonaws.com:8000/read/'
         const d = String(id.split('/'))
         const name = d
         const p = window.location.pathname.split('/')
@@ -104,7 +104,7 @@ const Document = () => {
     }, [theme, fileinfo, id])
 
     const editfile = useCallback( async (json) => {
-        const base = 'http://ec2-18-220-45-239.us-east-2.compute.amazonaws.com:8000/editFile/'
+        const base = 'http://ec2-3-144-132-172.us-east-2.compute.amazonaws.com:8000/editFile/'
         const d = String(id.split('/'))
         const name = d
         const p = window.location.pathname.split('/')
@@ -313,7 +313,7 @@ const Document = () => {
                             :
                             <div className='w-full'>
                             {   fileinfo === '' ?
-                            <div className='p-3'>Current Document Empty</div>
+                            <div className='p-3 flex justify-center items-center mt-20 sm:text-2xl'>{String(id.split('/'))}.json empty</div>
                             :
                             <div className='p-3'>Invalid JSON Format</div>
                             }

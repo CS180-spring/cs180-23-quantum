@@ -3,7 +3,7 @@ import { WarningNotification } from './WarningNotification';
 import { SuccessNotification } from './SuccessNotification';
 
 export async function UpdateDocument(theme,oldName,newName,path) {
-    const base = 'http://ec2-18-220-45-239.us-east-2.compute.amazonaws.com:8000/update/'
+    const base = 'http://ec2-3-144-132-172.us-east-2.compute.amazonaws.com:8000/update/'
     if ( path === undefined){
         path = 'database'
     }

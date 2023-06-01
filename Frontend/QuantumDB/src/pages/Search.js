@@ -17,7 +17,7 @@ const Search = () => {
     var [data, setData] = useState(null)
 
     const fetchData = async() => {
-        const u = 'http://ec2-18-220-45-239.us-east-2.compute.amazonaws.com:8000/search/'
+        const u = 'http://ec2-3-144-132-172.us-east-2.compute.amazonaws.com:8000/search/'
         const name = document.getElementById('searchQ').value 
         const path = '/database'
         const url = u + name + path
@@ -51,7 +51,7 @@ const Search = () => {
                 <h2 className='text-xl p-2 text-stone-700 font-medium dark:text-white'>
                 Collections
                 </h2>
-                <div className='grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
+                <div className='grid sm:grid-cols-1 md:grid-cols-2 '>
                     {data && Array.isArray(data) && data.filter(checkFolder).length>0 
                     ? 
                     data.map((e)=>{
@@ -65,7 +65,7 @@ const Search = () => {
                 <h2 className='mt-10 text-xl p-2 text-stone-700 font-medium dark:text-white'>
                 Documents
                 </h2>
-                <div className='grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
+                <div className='grid sm:grid-cols-1 md:grid-cols-2 '>
                     {data && Array.isArray(data) && data.filter(checkDoc).length>0 
                     ? 
                     data.map((e)=>{

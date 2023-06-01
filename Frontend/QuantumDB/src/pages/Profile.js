@@ -6,10 +6,10 @@ const Profile = () => {
 
     return (
         <div>  
-        <main class="profile-page dark:text-black">
+        <main class="profile-page text-black dark:text-white">
             <section class="relative py-16 bg-blueGray-200">
                 <div class="container mx-auto px-4">
-                <div class="relative flex flex-col min-w-0 break-words dark:bg-white bg-darkPurple w-full mb-6 shadow-xl rounded-lg">
+                <div class="relative flex flex-col min-w-0 break-words border-2 dark:border-white border-darkPurple w-full mb-6 shadow-xl rounded-lg">
                     <div class="px-6">
                     <div class="flex flex-wrap justify-center">
                         <div class="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">

@@ -7,7 +7,7 @@ export function ImportFile(theme, name, path, type, content) {
     if ( path === undefined){
         path = 'database'
     }
-    const base = 'http://ec2-18-220-45-239.us-east-2.compute.amazonaws.com:8000/import/'
+    const base = 'http://ec2-3-144-132-172.us-east-2.compute.amazonaws.com:8000/import/'
     const url = base + name +'/' + path + '/' + type
     axios
     .post(
