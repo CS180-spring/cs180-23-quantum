@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { BsArrowLeftCircle } from 'react-icons/bs'
 import { AiFillPieChart, AiOutlineSearch } from 'react-icons/ai'
 // import { SiOpenaccess } from 'react-icons/si'
-// import { CgProfile } from 'react-icons/cg'
+import { CgProfile } from 'react-icons/cg'
 import Logo from '../assets/images/logo.svg'
 import HamburgerButton from './HamburgerMenuButton/HamburgerButton'
 
@@ -17,7 +17,7 @@ const Sidebar = () => {
     { title: 'Database', path: '/', src: <AiFillPieChart /> },
     { title: 'Search', path: '/search', src: <AiOutlineSearch /> },
     // { title: 'Table', path: '/table', src: <AiOutlineTable /> },
-    // { title: 'Profile', path: '/profile', src: <CgProfile /> },
+    { title: 'Profile', path: '/profile', src: <CgProfile /> },
     //{ title: 'Signin', path: '/login', src: <SiOpenaccess />, gap: 'true' },
   ]
 

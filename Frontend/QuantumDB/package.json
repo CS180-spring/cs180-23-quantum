@@ -22,9 +22,12 @@
     "react-drag-drop-files": "^2.3.10",
     "react-icons": "^4.3.1",
     "react-json-to-table": "^0.1.7",
+    "react-particles": "^2.9.3",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "react-toastify": "^9.1.2",
+    "tsparticles": "^2.9.3",
+    "tsparticles-engine": "^2.9.3",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

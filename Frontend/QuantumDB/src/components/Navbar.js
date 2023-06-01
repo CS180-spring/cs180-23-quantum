@@ -7,11 +7,11 @@ const Navbar = () => {
   const location = useLocation();
 
   useEffect(() => {
-    if (window.location.pathname === '/'){
-      setTitle('/')
-    } else {
-      setTitle(window.location.pathname.replace('-','/').replace('/json','.json'))
-    }
+      if (window.location.pathname === '/'){
+        setTitle('/')
+      } else {
+        setTitle(window.location.pathname.replace('-','/').replace('/json','.json'))
+      }
   }, [location.pathname])
       
   return (

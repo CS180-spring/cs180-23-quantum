@@ -5,6 +5,7 @@ import { ThemeContext } from '../components/ThemeContext';
 import { toast } from 'react-toastify';
 import { motion } from 'framer-motion';
 import { AiOutlineEdit, AiOutlineSave, AiOutlineTable, AiOutlineSearch, AiOutlineReload, AiOutlineNumber } from 'react-icons/ai';
+import { BsBraces } from "react-icons/bs";
 import { IoMdClose } from "react-icons/io"
 import axios from 'axios';
 import { useParams } from "react-router";
@@ -72,7 +73,7 @@ const Document = () => {
     const [operator, setOperator] = React.useState(3);
 
     const fetchData = useCallback( async () => {
-        const u = 'http://ec2-3-18-109-0.us-east-2.compute.amazonaws.com:8000/read/'
+        const u = 'http://ec2-18-220-45-239.us-east-2.compute.amazonaws.com:8000/read/'
         const d = String(id.split('/'))
         const name = d
         console.log("name: " + d)
@@ -104,7 +105,7 @@ const Document = () => {
     }, [theme, fileinfo, id])
 
     const editfile = useCallback( async (json) => {
-        const base = 'http://ec2-3-18-109-0.us-east-2.compute.amazonaws.com:8000/editFile/'
+        const base = 'http://ec2-18-220-45-239.us-east-2.compute.amazonaws.com:8000/editFile/'
         const d = String(id.split('/'))
         const name = d
         console.log("name: " + d)
@@ -133,7 +134,7 @@ const Document = () => {
             .then(function (response) {
             console.log(response.data);})
             .catch(error=>WarningNotification(theme,error))
-            .then(SuccessNotification(theme, name + "saved!"))
+            .then(SuccessNotification(theme, name + " saved!"))
     }, [theme, id])
 
     useEffect(() => {
@@ -167,7 +168,8 @@ const Document = () => {
                 <div className='grid'>
                     <div className='flex justify-between mb-1 items-center'>
                         <h2 className='text-xl font-bold text-stone-700 dark:text-white ml-2'>Editor</h2>
-                        <div className='flex space-x-2 items-center'>                       
+                        <div className='flex space-x-2 items-center'>
+                        <motion.button type="button" onClick={() => setEditorinfo(JSON.stringify(JSON.parse(document.getElementById('texta').value), null, 2))} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><BsBraces/></motion.button>                       
                         <motion.button type="button" onClick={() => save(document.getElementById('texta').value)} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><AiOutlineSave/></motion.button>
                         </div>
                     </div>
