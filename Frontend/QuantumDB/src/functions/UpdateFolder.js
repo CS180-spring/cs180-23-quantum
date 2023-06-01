@@ -1,31 +1,9 @@
 import axios from 'axios';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
-const SuccessNotification = (theme, name) => toast.success('Folder successfully renamed!', {
-    position: "bottom-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: theme,
-});
-
-const WarningNotification = (theme,err) => toast.warn(err, {
-    position: "bottom-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: theme,
-});
+import { WarningNotification } from './WarningNotification';
+import { SuccessNotification } from './SuccessNotification';
 
 export async function UpdateFolder(theme,oldName,newName,path) {
-    const base = 'http://ec2-3-18-109-0.us-east-2.compute.amazonaws.com:8000/update/'
+    const base = 'http://ec2-3-144-132-172.us-east-2.compute.amazonaws.com:8000/update/'
     if ( path === undefined){
         path = 'database'
     }
@@ -39,13 +17,13 @@ export async function UpdateFolder(theme,oldName,newName,path) {
         axios.get(url)
         .catch((error) => { // error is handled in catch block
             if (error.response) { // status code out of the range of 2xx
-                if (error.response.status == 400){
+                if (error.response.status === 400){
                     WarningNotification(theme,"Failed to update folder: " + oldName)
                 }
-                if (error.response.status == 404){
+                if (error.response.status === 404){
                     WarningNotification(theme,"Folder already exists")
                 }
-                if (error.response.status == 403){
+                if (error.response.status === 403){
                     WarningNotification(theme,"Folder does not exist")
                 }
             } 
@@ -55,6 +33,6 @@ export async function UpdateFolder(theme,oldName,newName,path) {
               console.log('Error', error.message);
             }
           })
-        .then(SuccessNotification(theme,oldName))
+        .then(SuccessNotification(theme,oldName + 'successfully renamed to' + newName + '!'))
     }
 }

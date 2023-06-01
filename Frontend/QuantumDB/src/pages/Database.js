@@ -20,7 +20,7 @@ const Database = () => {
     const {theme} = useContext(ThemeContext)
 
     const fetchData = useCallback( async () => {
-        const url = 'http://ec2-3-18-109-0.us-east-2.compute.amazonaws.com:8000/read/database/database/folder'
+        const url = 'http://ec2-3-144-132-172.us-east-2.compute.amazonaws.com:8000/read/database/database/folder'
         const data = await axios.get(url)
             .then(function (response) {
                 const objects = response.data.toString().split('-');
@@ -50,7 +50,7 @@ const Database = () => {
       }, [])
           
     return (
-    <>
+    <div>
         <h2 className='text-xl p-2 text-stone-700 font-medium dark:text-white'>
         Collections
         </h2>
@@ -82,7 +82,7 @@ const Database = () => {
         <div className='fixed bottom-0 mb-5'>
             <Operations refresh={fetchData} />
         </div>
-    </>
+    </div>
       );
 }
 

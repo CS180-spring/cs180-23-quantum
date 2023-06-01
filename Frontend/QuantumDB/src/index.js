@@ -3,15 +3,19 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { ThemeProvider } from './components/ThemeContext'
+import { AuthProvider } from './components/AuthContext'
 import Background from './components/Background'
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+
     <ThemeProvider>
+    <AuthProvider>
         <Background>
             <App />
         </Background>
+    </AuthProvider>
     </ThemeProvider>
 )
 

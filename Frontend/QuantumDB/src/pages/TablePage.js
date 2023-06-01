@@ -1,7 +1,7 @@
 import React from 'react'
 
 export default function TablePage({theadData, tbodyData}) {
-   return (
+   return (
      <table>
          <thead>
             <tr>
