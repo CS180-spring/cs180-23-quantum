@@ -36,6 +36,29 @@ function isJsonString(str) {
     return result;
 }
 
+function sortByPropertyAsc(property){  
+    return function(a,b){  
+       if(a[property] > b[property])  
+          return 1;  
+       else if(a[property] < b[property])  
+          return -1;  
+   
+       return 0;  
+    }  
+ }
+
+ function sortByPropertyDes(property){  
+    return function(a,b){  
+       if(a[property] < b[property])  
+          return 1;  
+       else if(a[property] > b[property])  
+          return -1;  
+   
+       return 0;  
+    }  
+ }
+ 
+
 const Document = () => {
     let { id } = useParams();
     const ref = React.useRef(null);
@@ -257,8 +280,8 @@ const Document = () => {
                             sorting ?
                             <>
                                 <input placeholder='Key' id='sortKey' className='bg-darkPurple w-32 rounded p-2 text-white'></input>
-                                <motion.button type="button" whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><AiOutlineSortAscending/></motion.button>
-                                <motion.button type="button" whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><AiOutlineSortDescending/></motion.button>
+                                <motion.button onClick={() => {setViewerinfo(JSON.stringify(JSON.parse(viewerinfo).sort(sortByPropertyAsc(document.getElementById('sortKey').value))))}} type="button" whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><AiOutlineSortAscending/></motion.button>
+                                <motion.button onClick={() => {setViewerinfo(JSON.stringify(JSON.parse(viewerinfo).sort(sortByPropertyDes(document.getElementById('sortKey').value))))}} type="button" whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><AiOutlineSortDescending/></motion.button>
                                 <motion.button type="button" onClick={() => {setSorting(false);}} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><IoMdClose/></motion.button>
                             </>
                             :
