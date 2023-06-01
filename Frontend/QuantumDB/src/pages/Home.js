@@ -20,7 +20,7 @@ const Home = () => {
     <div className='w-100vw h-100vh overflow-hidden z-10'>
     <div className='grid place-items-center min-h-screen'>
         <div className=''>
-            <img src={logo} className='mx-auto h-36' />
+            <img alt='QuantumDB Logo' src={logo} className='mx-auto h-36' />
             <h1 className='text-4xl md:text-8xl font-medium text-white'><AnimateCharacters text="QuantumDB" /></h1>
             <motion.a whileHover={{scale:1.1}} className='flex justify-center mt-20' href='/login'><AnimateWords text="Get Started →" /></motion.a>
         </div>
@@ -66,12 +66,10 @@ const Home = () => {
                         value: "#ffffff",
                     },
                     links: {
-                        color: "#ffffff",
-                        // color: '#4b3375',
-                        distance: 150,
+                        color: '#4b3375',
+                        distance: 200,
                         enable: true,
-                        opacity: 0.5,
-                        // opacity: 1,
+                        opacity: 1,
                         width: 1,
                     },
                     collisions: {

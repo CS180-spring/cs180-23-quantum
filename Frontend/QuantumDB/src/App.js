@@ -15,7 +15,6 @@ import './index.css'
 
 function App() {
     const {auth} = useContext(AuthContext)
-    console.log(auth)
     return (
         <BrowserRouter>
             <Layout>

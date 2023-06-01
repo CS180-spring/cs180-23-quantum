@@ -37,14 +37,14 @@ const Profile = () => {
                             </p>
                         </div>
                         </div>
-                    </div>
-                    </div>
-                    <button
+                        <button
                         onClick={() => {window.location.pathname = ''; setAuth('false');}}
-                        class="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:border-0 hover:bg-transparent hover:text-white dark:hover:text-gray-700 focus:outline-none focus:ring active:text-white"
+                        class="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:border-0 hover:bg-transparent hover:text-white dark:hover:text-blue-600 focus:outline-none focus:ring active:text-white"
                     >
                         Log Out
                     </button>
+                    </div>
+                    </div>
                 </div>
                 </div>
             </section>

@@ -4,8 +4,8 @@ import 'draft-js/dist/Draft.css';
 import { ThemeContext } from '../components/ThemeContext';
 import { toast } from 'react-toastify';
 import { motion } from 'framer-motion';
-import { AiOutlineEdit, AiOutlineSave, AiOutlineTable, AiOutlineSearch, AiOutlineReload, AiOutlineNumber } from 'react-icons/ai';
-import { BsBraces } from "react-icons/bs";
+import { AiOutlineEdit, AiOutlineSave, AiOutlineTable, AiOutlineSearch, AiOutlineReload, AiOutlineNumber, AiOutlineSortAscending, AiOutlineSortDescending } from 'react-icons/ai';
+import { BsBraces, BsFilter } from "react-icons/bs";
 import { IoMdClose } from "react-icons/io"
 import axios from 'axios';
 import { useParams } from "react-router";
@@ -36,29 +36,6 @@ function isJsonString(str) {
     return result;
 }
 
-// function sortJsonArrayByProperty(objArray, prop, direction){
-//     if (arguments.length<2) throw new Error("sortJsonArrayByProp requires 2 arguments");
-//     var direct = arguments.length>2 ? arguments[2] : 1; //Default to ascending
-
-//     if (objArray && objArray.constructor===Array){
-//         var propPath = (prop.constructor===Array) ? prop : prop.split(".");
-//         objArray.sort(function(a,b){
-//             for (var p in propPath){
-//                 if (a[propPath[p]] && b[propPath[p]]){
-//                     a = a[propPath[p]];
-//                     b = b[propPath[p]];
-//                 }
-//             }
-//             // convert numeric strings to integers
-//             a = a.match(/^\d+$/) ? +a : a;
-//             b = b.match(/^\d+$/) ? +b : b;
-//             return ( (a < b) ? -1*direct : ((a > b) ? 1*direct : 0) );
-//         });
-//     }
-// }
-// sortJsonArrayByProperty(results, 'attributes.OBJECTID');
-// sortJsonArrayByProperty(results, 'attributes.OBJECTID', -1);
-
 const Document = () => {
     let { id } = useParams();
     const ref = React.useRef(null);
@@ -70,13 +47,13 @@ const Document = () => {
     const [stringState, setStringState] = React.useState(false);
     const [intState, SetIntState] = React.useState(false);
     const [searching, setSearching] = React.useState(false);
+    const [sorting, setSorting] = React.useState(false)
     const [operator, setOperator] = React.useState(3);
 
     const fetchData = useCallback( async () => {
         const u = 'http://ec2-18-220-45-239.us-east-2.compute.amazonaws.com:8000/read/'
         const d = String(id.split('/'))
         const name = d
-        console.log("name: " + d)
         const p = window.location.pathname.split('/')
         var path = ''
         if ( String(p[1]) === name ){
@@ -85,7 +62,6 @@ const Document = () => {
             path = p[1].replaceAll("/","-")
         }
         const namep = name + '/'
-        console.log("path: " + path)
         const type = "/file"
         const url = u + namep + path + type
         await axios.get(url)
@@ -108,7 +84,6 @@ const Document = () => {
         const base = 'http://ec2-18-220-45-239.us-east-2.compute.amazonaws.com:8000/editFile/'
         const d = String(id.split('/'))
         const name = d
-        console.log("name: " + d)
         const p = window.location.pathname.split('/')
         var path = ''
         if ( String(p[1]) === name ){
@@ -116,7 +91,6 @@ const Document = () => {
         } else {
             path = p[1].replaceAll("/","-")
         }
-        console.log("path: " + path)
         const url = base + name +'/' + path
         axios.post(
             url,
@@ -144,6 +118,7 @@ const Document = () => {
     function save(str){
         if (isJsonString(str) === true){
             editfile(document.getElementById('texta').value)
+            setViewerinfo(editorinfo)
         } else {
             WarningNotification(theme, "Invalid JSON Format!");
         }
@@ -190,18 +165,21 @@ const Document = () => {
                 <div className='grid'>
                     <div className='flex justify-between mb-1 items-center'>
                         <h2 className='text-xl font-bold text-stone-700 dark:text-white ml-2'>Table</h2>
-                        <div className='flex space-x-2 items-center'>
+                        <div className='flex space-x-2 items-center'> 
                         {
+                            sorting ?
+                            <></>
+                            :
+                            <>
+                            {
                             searching ?
                             <>
                             {
                                 stringState ?
                                 <>
-                                <h3>Count: {JSON.parse(viewerinfo).length}</h3>
-                                <input placeholder='Key' id='Key' className='bg-darkPurple w-32 rounded p-2 text-white'></input>
+                                <input placeholder='Key' id='Key' className='bg-darkPurple w-12 sm:w-32 rounded p-2 text-white'></input>
                                 <input placeholder='Value' id='Value' className='bg-darkPurple w-32 rounded p-2 text-white'></input>
                                 <motion.button type="button" onClick={() => setViewerinfo(JSON.stringify(searchJson(JSON.parse(viewerinfo), function(key, value) { return key === document.getElementById('Key').value && value === document.getElementById('Value').value;}), null, "\t"))} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><AiOutlineSearch/></motion.button>
-                                <motion.button type="button" onClick={() => {setSearching(false); setStringState(false); SetIntState(false);}} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><IoMdClose/></motion.button>
                                 </>
                                 :
                                 <>
@@ -216,8 +194,7 @@ const Document = () => {
                             {
                                     intState ?
                                     <>
-                                    <h3>Count: {JSON.parse(viewerinfo).length}</h3>
-                                    <input placeholder='Key' id='KeyI' className='bg-darkPurple w-32 rounded p-2 text-white'></input>
+                                    <input placeholder='Key' id='KeyI' className='bg-darkPurple w-12 sm:w-32 rounded p-2 text-white'></input>
                                     {
                                         operator === 1 ? 
                                         <motion.button type="button" onClick={() => {setOperator(1);}} whileHover={{scale:1.1}} className='bg-medBlue rounded p-2 text-white'>{'>'}</motion.button>
@@ -248,10 +225,9 @@ const Document = () => {
                                         :
                                         <motion.button type="button" onClick={() => {setOperator(5);}} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-2 text-white'>{'<'}</motion.button>
                                     }                                    
-                                    <input placeholder='Value' id='ValueI' className='bg-darkPurple w-32 rounded p-2 text-white'></input>
+                                    <input placeholder='Value' id='ValueI' className='bg-darkPurple w-16 sm:w-32 rounded p-2 text-white'></input>
                                     <motion.button type="button" 
                                     onClick={() => setViewerinfo(JSON.stringify(searchJson(JSON.parse(viewerinfo), function(key, value) { return operatorChange(key, value);}), null, "\t"))} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><AiOutlineSearch/></motion.button>
-                                    <motion.button type="button" onClick={() => {setSearching(false); setStringState(false); SetIntState(false);}} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><IoMdClose/></motion.button>
                                     </>
                                     :
                                     <>
@@ -263,23 +239,54 @@ const Document = () => {
                                     }
                                     </>
                             }
+                            <motion.button type="button" onClick={() => {setSearching(false); setStringState(false); SetIntState(false);}} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white '><IoMdClose/></motion.button>
                             </>   
                             :
                             <>
-                            <motion.button type="button" onClick={() => setSearching(true)} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><AiOutlineSearch/></motion.button>
+                            <motion.button type="button" onClick={() =>{ if (isJsonString(viewerinfo)){setSearching(true)}}} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><AiOutlineSearch/></motion.button>
                             </>
-                        }                   
+                        }
+                            </>
+                        }
+                        {
+                            searching ? 
+                            <></>
+                            :
+                            <>
+                            {
+                            sorting ?
+                            <>
+                                <input placeholder='Key' id='sortKey' className='bg-darkPurple w-32 rounded p-2 text-white'></input>
+                                <motion.button type="button" whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><AiOutlineSortAscending/></motion.button>
+                                <motion.button type="button" whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><AiOutlineSortDescending/></motion.button>
+                                <motion.button type="button" onClick={() => {setSorting(false);}} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><IoMdClose/></motion.button>
+                            </>
+                            :
+                            <>
+                            <motion.button type="button" onClick={() =>{ if (isJsonString(viewerinfo)){setSorting(true)}}} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><BsFilter/></motion.button>
+                            </>
+                        } 
+                            </>
+                        }
+                        {
+                            searching === false && sorting === false ?
+                            <>
                             <motion.button type="button" onClick={() => {setViewerinfo(editorinfo)}} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><AiOutlineReload/></motion.button>
+                            </>
+                            :
+                            <>
+                            </>
+                        }                     
                         </div>
                     </div>
                 </div>
                 <div ref={ref} className='mt-5 scroll-py-0 overflow-auto h-144 md:h-160'>
                         { isJsonString(viewerinfo) === true ?
+                            <>
                             <div className='w-full'>
                                 <JsonToTable json={JSON.parse(viewerinfo)} />
-                                <div className='flex items-center justify-center'>
-                                </div>
                             </div>
+                            </>
                             :
                             <div className='w-full'>
                             {   fileinfo === '' ?
@@ -290,6 +297,15 @@ const Document = () => {
                             </div>
                         }
                 </div>
+                { isJsonString(viewerinfo) === true && searching ?
+                            <>
+                            <div className='flex items-center justify-center'>
+                                <h3>Count: {JSON.parse(viewerinfo).length}</h3>
+                            </div>
+                            </>
+                            :
+                            <></>
+                }
                 <div className='fixed bottom-0 space-x-1 flex mb-5'>
                     <motion.button type="button" onClick={() => setEdit(true)} whileHover={{scale:1.1}} className='bg-darkPurple rounded p-3 text-white'><AiOutlineEdit/></motion.button>
                 </div>
