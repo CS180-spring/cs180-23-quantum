@@ -5,7 +5,7 @@ export function DownloadDocument(theme,name,path) {
     if ( path === undefined){
         path = 'database'
     }
-    const base = 'http://ec2-3-144-132-172.us-east-2.compute.amazonaws.com:8000/download/'
+    const base = 'http://ec2-3-22-166-39.us-east-2.compute.amazonaws.com:8000/download/'
     const url = base + name +'/' + path + '/file'
     fetch(url)
         .then(res => res.blob())

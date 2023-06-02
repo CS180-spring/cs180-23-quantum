@@ -17,7 +17,7 @@ const Search = () => {
     var [data, setData] = useState(null)
 
     const fetchData = async() => {
-        const u = 'http://ec2-3-144-132-172.us-east-2.compute.amazonaws.com:8000/search/'
+        const u = 'http://ec2-3-22-166-39.us-east-2.compute.amazonaws.com:8000/search/'
         const name = document.getElementById('searchQ').value 
         const path = '/database'
         const url = u + name + path

@@ -156,7 +156,7 @@ const Login = () => {
             </h2>
       
             <p class="mt-4 leading-relaxed text-white/90">
-            "Empower Your Data Universe with QuantumDB: Unleash the Power of Next-Generation Database Management."
+            Empower Your Data Universe with QuantumDB: Unleash the Power of Next-Generation Database Management.
             </p>
           </div>
         </section>
@@ -309,7 +309,7 @@ const Login = () => {
               </h1>
       
               <p class="mt-4 leading-relaxed dark:text-white text-gray-500">
-              "Empower Your Data Universe with QuantumDB: Unleash the Power of Next-Generation Database Management."
+              Empower Your Data Universe with QuantumDB: Unleash the Power of Next-Generation Database Management.
               </p>
             </div>
       
