@@ -21,7 +21,7 @@ const Collection = () => {
     const {theme} = useContext(ThemeContext)
     let { id } = useParams();
     const fetchData = useCallback( async () => {
-        const u = 'http://ec2-3-144-132-172.us-east-2.compute.amazonaws.com:8000/read/'
+        const u = 'http://ec2-3-22-166-39.us-east-2.compute.amazonaws.com:8000/read/'
         const d = id.split('/')
         const name = d+'/'
         console.log("name: " + d)

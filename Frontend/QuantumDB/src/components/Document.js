@@ -45,7 +45,7 @@ const Document = (props) => {
             <div className='flex space-x-1'>
               <button onClick={(e) => {UpdateDocument(theme, props.name.split(".")[0], document.getElementById('new-file-name').value, id, 'new-file-name'); props.refresh()}} className='bg-green-700 rounded p-2 text-white w-8 flex justify-center items-center'><AiOutlineSave/></button>
               <button onClick={(e) => {DeleteDocument(theme, props.name.split(".")[0], id); props.refresh()}} className='bg-red-800 rounded p-2 text-white w-8 flex justify-center items-center'><AiOutlineDelete/></button>
-              <button onClick={(e) => setEditState(false)} className='bg-darkPurple rounded p-2 text-white w-8 flex justify-center items-center'><IoMdClose/></button>
+              <button onClick={(e) => {setEditState(false); props.refresh()}} className='bg-darkPurple rounded p-2 text-white w-8 flex justify-center items-center'><IoMdClose/></button>
             </div>
       </motion.div>
     }

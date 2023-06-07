@@ -42,7 +42,6 @@ const Folder = (props) => {
             </a>
         }
             <div className='flex space-x-1'>
-            <button className='bg-darkPurple rounded p-2 text-white w-8 flex justify-center items-center'><AiOutlineDownload/></button>
             <button onClick={(e) => setEditState(true)} className='bg-darkPurple rounded p-2 text-white w-8 flex justify-center items-center'><AiOutlineEdit/></button>
             </div>
         </motion.div>
