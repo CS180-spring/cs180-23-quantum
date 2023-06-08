@@ -2,14 +2,14 @@
 
 # QuantumDB - A Document Data Store
 
-QuantumDB is a Web-based Document Data Store used to manage and process large volumes of data. The product will be able to create documents, read documents, update documents, as well as deleting documents. It will also allow developers to create collections and databases to group related documents together. The product will also have the ability to filter and query data. The data will be stored locally and developers will be able to interact with QuantumDB the GUI provided to them.
+QuantumDB is a Web-based Document Data Store used to manage and process large volumes of data through CRUD actions combined with useful tools such as file upload/download, JSON editor with syntax checking and prettify features. The software allows developers and users to create collections to group related documents and datasets together. The product also has the ability to filter and query data efficiently. QuantumDB's backend is hosted on an AWS server which allows multiple users from different devices to interact with the frontend and make live changes to the database simultaneously.
 
 ## Team members
-- Rasa Jahromi (Software Architect, Data Structure Engineer)
-- Omar Nosseir (Software Architect, Algorithm and Performance Specialist)
-- Adhith Karthikeyan (Quality Assurance/Testing Lead, Data Structure Engineer)
-- Andrew Krikorian (Frontend Engineer, Algorithm and Performance Specialist)
-- Yuk Shun Wong (Frontend Engineer, Quality Assurance/Testing Lead)
+- [Rasa Jahromi](https://github.com/rjdahomie) (Backend Engineer)
+- [Omar Nosseir](https://github.com/onoss98) (Algorithm and Performance Specialist)
+- [Adhith Karthikeyan](https://github.com/kkadhith) (Data Structure Engineer)
+- [Andrew Krikorian](https://github.com/andykr1k) (Frontend Engineer)
+- [Yuk Shun Wong](https://github.com/mikew23) (Quality Assurance Engineer)
 
 ## Technologies
 - **Interface**: Responsive Web Application
@@ -21,26 +21,23 @@ QuantumDB is a Web-based Document Data Store used to manage and process large vo
 - **Database/Server**: AWS EC2 t2.Large
 
 
-## Features (tentative)
-- Feature 1: Creates, reads, updates and deletes documents/collections/databases
-- Feature 2: Filters data according to user’s preference
-- Feature 3: Allows “SQL type” querying
-- Feature 4: Import/Export Data
-- Feature 5: Sort query (Order by ascending and descending)
-- Feature 6: Count query
-- Feature 7: Limit query
+## Features
+- PC/Mobile/Tablet screen support
+- App can handle multiple live users
+- Light/Dark Mode
+- Users can create accounts to login to access their collections
+- Creates, reads, updates and deletes documents/collections/databases
+- Filters data according to user’s preference
+- Allows “SQL type” querying
+- Import/Export Data
+- Sort query (Order by ascending and descending)
+- Count query
+- Limit query
 
 
 ## Interface Documentation
-
-Below is an abstract visualization of the colorscheme and general layout of the software.
-The developer is able to access this layout through a web browser like Google Chrome using the following url <tbd>
-  
-The user will be able to create, delete, acess documents using self explanatory buttons on the front end.
 <p align = "center">
 <img src = "https://github.com/CS180-spring/cs180-23-quantum/blob/main/assets/figma.png">
-  
- Below is an early visualization of the layout for querying, using the filter and limit methods.
   
  In order to filter a certain value, the user can type the desired value in the "Search for filters" cell.
  The user may aslo use multiple filters simultaneously by including additional values in the cells on the right of "OR".
