@@ -36,10 +36,21 @@ QuantumDB is a Web-based Document Data Store used to manage and process large vo
 
 
 ## Interface Documentation
+Below are some screenshots of the UI.
+
+## Landing Page:
 <p align = "center">
-<img src = "https://github.com/CS180-spring/cs180-23-quantum/blob/main/assets/figma.png">
-  
- In order to filter a certain value, the user can type the desired value in the "Search for filters" cell.
- The user may aslo use multiple filters simultaneously by including additional values in the cells on the right of "OR".
+<img src = "https://github.com/CS180-spring/cs180-23-quantum/blob/main/assets/landing.jpeg">
+
+## Login Page:
 <p align = "center">
-<img src = "https://github.com/CS180-spring/cs180-23-quantum/blob/main/assets/fimga2.png">
+<img src = "https://github.com/CS180-spring/cs180-23-quantum/blob/main/assets/login.jpeg">
+
+## Home Page:
+Light Mode
+<p align = "center">
+<img src = "https://github.com/CS180-spring/cs180-23-quantum/blob/main/assets/home-light.png">
+
+Dark Mode
+<p align = "center">
+<img src = "https://github.com/CS180-spring/cs180-23-quantum/blob/main/assets/home-dark.png">
